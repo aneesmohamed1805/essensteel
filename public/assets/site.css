@@ -147,3 +147,15 @@ main > .section > .dual:has(> div > a[href="/partnership/"])::after {
     padding-top: 1.2rem;
   }
 }
+
+.insight-article{max-width:920px}
+.insight-article-header,.insight-body,.insight-article-footer{max-width:68ch;margin-inline:auto}
+.insight-article-header>.textlink{display:inline-block;margin-bottom:clamp(1.4rem,4vw,2.6rem)}
+.insight-article-header h1{font-size:clamp(2.2rem,5vw,4rem);margin:.35rem 0 .8rem}
+.insight-lead{font-size:clamp(1.1rem,2vw,1.4rem);color:#474747}
+.insight-figure{margin:clamp(1.6rem,4vw,3rem) 0}
+.insight-figure img{width:100%;aspect-ratio:16/9;object-fit:cover}
+.insight-figure figcaption{font-size:.8rem;color:#555;margin-top:.4rem}
+.insight-body{font-size:clamp(1rem,1.5vw,1.12rem);line-height:1.75}
+.insight-body h2{font-size:clamp(1.35rem,2.5vw,1.9rem);margin:1.55em 0 .5em}
+.insight-article-footer{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;border-top:1px solid #ddd;margin-top:2rem;padding-top:1.2rem}

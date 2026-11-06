@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 
 root = Path(__file__).parent / 'public'
-nav = [('About','about'),('Products','products'),('Applications','sectors'),('Manufacturing','technology'),('Quality','standards'),('Insights','insights'),('Contact','contact')]
+nav = [('About','about'),('Products','products'),('Applications','sectors'),('Manufacturing','technology'),('Quality','standards'),('Insights','insights'),('Technical Resources','downloads'),('Contact','contact')]
 products = [
  ('PC Strand','pc','Prestressing strand for concrete structures such as bridges, rail infrastructure and buildings.','Infrastructure'),
  ('ACSR Steel Core Wire & Strand','acsr','Steel core wire and strand for aluminium conductor steel reinforced (ACSR) used in overhead power transmission. Essen supplies the steel core component.','Power Transmission'),
@@ -81,7 +81,6 @@ def page(path,title,description,body):
 interior_visuals = {
     'about': 'about-editorial', 'technology': 'factory', 'standards': 'hero',
     'sustainability': 'factory', 'sectors': 'infra', 'insights': 'catalogue-editorial',
-    'insights/pc-strand': 'hero', 'insights/mill-test-report': 'factory',
     'contact': 'contact-editorial', 'products': 'catalogue-editorial', 'partnership': 'hero', 'downloads': 'hero', 'projects': 'infra',
 }
 
@@ -321,8 +320,36 @@ contact_content = f"""
 """
 interior('contact','Contact Essen Steel','Speak to the sales team about a quote, product specification or delivery requirement.',contact_content)
 interior('insights','Insights','Practical guides to steel strand and technical documentation.',stories_grid())
-for title,slug,img,desc,body in stories:
-    interior('insights/'+slug,title,desc,photo(img,'Illustrative detail','detail-photo')+f'<p>{body}</p>'+button('/downloads/','Technical Resources'))
+article_headings = {
+    'pc-strand': ('How prestressing works', 'What to confirm before ordering'),
+    'mill-test-report': ('Match the report to the material', 'Check the results against the order'),
+}
+for title, slug, img, desc, body in stories:
+    headings = article_headings.get(slug)
+    if headings:
+        sentences = body.split('. ')
+        split = 2 if slug == 'pc-strand' else 1
+        first = '. '.join(sentences[:split]) + '.'
+        second = '. '.join(sentences[split:])
+        prose = f'<h2>{headings[0]}</h2><p>{escape(first)}</p><h2>{headings[1]}</h2><p>{escape(second)}</p>'
+    else:
+        prose = ''.join(f'<p>{escape(paragraph)}</p>' for paragraph in body.split('\n\n'))
+    article = f"""
+    <article class="wrap section insight-article">
+      <header class="insight-article-header">
+        <a class="textlink" href="/insights/">← All insights</a>
+        <p class="eyebrow">Technical insight</p>
+        <h1>{escape(title)}</h1>
+        <p class="insight-lead">{escape(desc)}</p>
+      </header>
+      <figure class="insight-figure">{photo(img, 'Illustrative detail')}<figcaption>Illustrative image</figcaption></figure>
+      <div class="insight-body">{prose}</div>
+      <div class="insight-article-footer">
+        <a class="textlink" href="/insights/">← All insights</a>
+        {button('/downloads/', 'Technical Resources')}
+      </div>
+    </article>"""
+    page('insights/'+slug,title,desc,article)
 interior('privacy-policy','Privacy','Information for visitors to this review build.','<p>Quote and documentation links open your email app. If you choose to send an email, Essen Steel receives the information you include in it.</p>')
 interior('cookies','Cookies','Information for visitors to this review build.','<p>This preview uses no first-party cookies or analytics scripts. Its stylesheet requests the Exo typeface from Google Fonts.</p>')
 interior('404.html','Page unavailable','The address may have changed.',button('/','Return to Home'))
