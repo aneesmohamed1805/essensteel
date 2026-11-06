@@ -208,11 +208,11 @@ sector_details = [
 sector_nav = '<nav class="sector-nav" aria-label="Jump to sector">'+''.join(link('#'+key,title) for key,title,*_ in sector_details)+'</nav>'
 sector_context = {
     'infra': 'For staged civil works, include the quantity and delivery window for each stage. Identify any inspection and material traceability requirements before placing the order.',
-    'construction': 'For precast or prestressing work, establish the specification with the design and installation teams. Tell us about any restrictions on pack dimensions, handling or storage at the plant or site.',
-    'power': 'Conductor manufacturers should identify the required core wire diameter, coating and mechanical properties. Where the specification calls for a stranded core, include the construction and applicable test documentation.',
+    'construction': 'The project team should specify strand for the intended system, whether precast, post-tensioned or another designed application. Include any restrictions on pack dimensions, handling or storage at the plant or site.',
+    'power': 'Conductor manufacturers should identify the required core diameter, coating and mechanical properties. For aluminium-clad steel or overhead ground wire enquiries, give the designation and construction so the sales team can confirm availability and documentation.',
     'telecommunications': 'Identify whether the wire is for a duct installation or an armouring process. The intended function determines the specification and which wire family to discuss.',
-    'other': 'For fence manufacture or agricultural installations, explain the exposure conditions and downstream process. This helps establish which coating, wire properties and pack format the order requires.',
-    'manufacturing': 'Share how the wire is fed, formed or cut, and which dimensions and mechanical properties affect your process. Note any limits on coil size or pack weight.',
+    'other': 'Applications include chain-link and welded mesh, gabion baskets, poultry mesh, crop trellises and vineyard support. Confirm the wire specification with the fabricator and share the intended exposure, forming process and pack format.',
+    'manufacturing': 'Engineering uses also include binding wire for tying reinforcement. Share how the wire is fed, formed or cut and which dimensions and mechanical properties affect the process. Note any limits on coil size or pack weight.',
     'bedding': 'Include the spring design requirements and how the wire feeds into your forming equipment. Confirm the pack format and the properties your production team needs to check.',
 }
 sector_image_descriptions = {
@@ -236,7 +236,7 @@ green_manufacturing = f"""
   {photo('green-overview', 'Illustrative steel wire offcuts collected beside wire coils')}
   <div class="green-manufacturing-copy">
   <h2 class="rule">Green Manufacturing</h2>
-  <p>Responsible manufacturing starts with how steel wire is drawn, finished and packed. Energy use in production, material yield and the handling of steel offcuts are useful areas to review when assessing a wire or strand supply chain.</p>
+  <p>Essen Steel’s technology information identifies Galva Green as a galvanising process used for steel wire. Energy use, material yield and the handling of steel offcuts are useful areas to review when assessing the production route for a particular product.</p>
   <p>For a supplier assessment or tender, specify the product or facility, the reporting period and the evidence you need. Facility energy figures and product-level environmental information answer different questions.</p>
   <a class="textlink" href="/sustainability/">Explore responsible manufacturing →</a>
   </div>
@@ -253,7 +253,11 @@ interior('technology','Manufacturing and Technology','From drawn wire to finishe
     feature('Inspection, packing and dispatch', [
         'A labelled coil and its inspection record give the receiving team two points to match before material enters production. Agree the identifiers, report format and checks required for the order before packing and dispatch.',
         'Confirm the pack configuration, quantity, destination and delivery window before ordering. Let us know about unloading restrictions or staging requirements.'
-    ],'mill','Illustrative coil tag and inspection worksheet','/standards/','Review quality and documentation')
+    ],'mill','Illustrative coil tag and inspection worksheet','/standards/','Review quality and documentation'),
+    feature('Inline treatment and specialist lines', [
+        'Essen Steel’s technology information describes inline E-Phos treatment for phosphate-coated wire. This is a surface treatment step within the wire drawing line. The required finish depends on the product and the buyer’s downstream process.',
+        'The technology range also includes low-relaxation strand production, aluminium cladding and stranding. For low-relaxation PC strand, share the project’s grade and test requirements. For aluminium-clad steel, specify the wire or strand construction and the applicable standard.'
+    ],'audit-technology','Illustrative inline wire treatment and guide rollers','/downloads/','Request process and product information')
 )+green_manufacturing)
 interior('standards','Quality and Certifications','What engineers and procurement teams should agree before ordering and check when receiving material.',feature_group(
     feature('Agree the acceptance criteria', [
@@ -267,7 +271,11 @@ interior('standards','Quality and Certifications','What engineers and procuremen
     feature('Check certificates for scope', [
         'A management-system certificate covers a defined system and facility. A product certificate covers specified products, and an authority approval has its own scope. Ask for the document applicable to your product, facility and project.',
         'Review the issuing body, covered scope and validity against your tender or procurement requirements.'
-    ],'factory','Illustrative manufacturing equipment','/contact/','Request the applicable documents')
+    ],'factory','Illustrative manufacturing equipment','/contact/','Request the applicable documents'),
+    feature('In-house material testing', [
+        'Essen Steel’s standards information describes checks that begin with incoming wire rod and continue through product verification. The laboratory uses universal testing equipment and extensometers to measure mechanical properties, including extension under load.',
+        'If your specification requires a particular test, identify the method, sampling requirements and reporting format when you place the enquiry.'
+    ],'audit-testing','Illustrative steel wire specimen in a universal testing machine','/downloads/','Request testing documentation')
 ))
 interior('sustainability','Responsible Manufacturing','What to ask about resource use, material selection and evidence for your procurement process.',feature_group(
     feature('Define what you need to measure', [
@@ -291,16 +299,24 @@ interior('about','About Essen Steel','A UAE manufacturer of steel wire and stran
     feature('Match the wire to the work', [
         'Essen works with engineers, procurement teams and manufacturers to clarify order requirements. A useful enquiry covers the applicable standard, grade, dimensions, quantity, packaging and test documentation.',
         'For UAE or international enquiries, include the destination and required delivery date so the sales team can review the supply arrangements.'
-    ],'hero','Illustrative steel strand close-up','/partnership/','Discuss a supply requirement')
+    ],'hero','Illustrative steel strand close-up','/partnership/','Discuss a supply requirement'),
+    feature('Kizad and Khalifa Port', [
+        'Essen Steel manufactures in Kizad, Abu Dhabi, near Khalifa Port. The location supports road and sea freight planning for domestic and international enquiries.',
+        'For export orders, give the destination, required delivery window and any packing or shipping document requirements so the team can discuss the applicable arrangements.'
+    ],'audit-logistics','Illustrative coil shipment approaching a container logistics yard','/partnership/','Explore partnership and supply')
 ))
 interior('partnership','Partnership and Supply','From the first specification discussion to delivery planning.',feature_group(
     feature('Send a complete enquiry', ['Start with the application and product designation. Add the standard, grade, dimensions, quantity and any requirements for testing, coating or documentation. If the specification is still being developed, share the operating conditions and decision timeline.'], 'hero','Illustrative steel strand','/products/','Find the product'),
     feature('Plan for receipt and handling', ['Tell us the delivery destination, required date and packaging format. Include unloading, storage or production-line constraints so those requirements can be considered before the order is confirmed.'], 'factory','Illustrative industrial reel handling','/contact/','Request a Quote')
 ))
-interior('downloads','Technical Resources','Request product data sheets and quality documentation.',feature_group(
+policy_documents = '''<section class="catalogue-guide">
+  <div><h2>Company and product literature</h2><p>Request the current company brochure or the low-relaxation PC strand brochure. For a purchase specification, ask for the applicable product data sheet and current standard.</p><a class="textlink" href="mailto:sales@essensteel.com?subject=Essen%20Steel%20brochure%20request">Request a brochure →</a></div>
+  <div><h2>Quality, EHS and energy policies</h2><p>Request the current Quality, Environment, Health and Safety, or Energy Policy for supplier onboarding, prequalification or tender documentation.</p><a class="textlink" href="mailto:sales@essensteel.com?subject=Essen%20Steel%20policy%20request">Request a policy →</a></div>
+</section>'''
+interior('downloads','Technical Resources','Request product data sheets, policies and quality documentation.',feature_group(
     feature('Product data sheets', ['Share the product family and applicable standard or grade so the sales team can identify the relevant document. If comparing materials, use the same units and confirm that each data sheet covers the construction and dimensions you intend to order.'], 'pc','Illustrative steel strand detail','/products/','Browse the catalogue'),
     feature('Test reports and certificates', ['Specify which reports or certificates your purchase order or tender requires. Include the required test results, issuing body or approval scope where applicable.'], 'mill','Illustrative coil tag and inspection worksheet','mailto:sales@essensteel.com?subject=Product%20documentation%20request','Request documentation')
-))
+)+policy_documents)
 interior('projects','Project Enquiries','Discuss wire and strand requirements for your project.',feature_group(
     feature('Start with the design requirement', ['Tell us what you are building, which product the design specifies and what standard applies. Include the project location, procurement stage, quantities and delivery timetable.'], 'infra','Illustrative infrastructure application','/sectors/','Browse applications'),
     feature('Prepare the procurement package', ['Share inspection or documentation requirements early, especially where a consultant or authority must review the material. Include packaging or handling constraints for staged deliveries.'], 'hero','Illustrative steel strand','/contact/','Discuss your project')
@@ -331,6 +347,7 @@ contact_content = f"""
       <p><a href="mailto:sales@essensteel.com">sales@essensteel.com</a><br><a href="tel:+97125109000">+971 2 510 9000</a></p>
       <h3>Abu Dhabi, UAE</h3>
       <address>KHIA4-18D, Kizad A<br>Al Taweelah, Abu Dhabi, UAE</address>
+      <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Essen+Steel+Industry+LLC+Abu+Dhabi">Find Essen Steel on the map →</a></p>
     </div>
   </aside>
 </div>

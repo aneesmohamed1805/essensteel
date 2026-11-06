@@ -14,7 +14,8 @@
     "about-editorial",
     "slot-plant-1",
     "slot-civil-1",
-    "slot-quality-3|Illustrative steel samples and measuring tools on an inspection bench"
+    "slot-quality-3|Illustrative steel samples and measuring tools on an inspection bench",
+    "audit-logistics"
   ],
   "contact": [
     "contact-editorial",
@@ -97,7 +98,8 @@
     "quality-editorial",
     "slot-process-3",
     "mill",
-    "slot-context-1"
+    "slot-context-1",
+    "audit-testing"
   ],
   "sustainability": [
     "sustainability-editorial",
@@ -109,6 +111,7 @@
     "slot-plant-2",
     "slot-process-1",
     "slot-process-2|Illustrative strapped coil and packing station",
+    "audit-technology",
     "green-overview"
   ]
 }
