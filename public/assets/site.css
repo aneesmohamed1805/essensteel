@@ -52,3 +52,50 @@
 .hero p{max-width:49ch;margin-bottom:1.25rem}.hero-caption{display:block;margin-top:1rem;color:#fff;font-size:.78rem}.hero .outline{opacity:.7}
 img.sector-art{width:100%;height:100%;object-fit:cover}
 @media(max-width:680px){img.sector-art{height:235px}}
+
+/* CTA styling and alignment within the existing panels. */
+.textlink,
+.textlink:hover,
+.textlink:focus-visible,
+.button,
+.button:hover,
+.button:focus-visible,
+.story:hover h3,
+.card:hover span,
+.tile:hover span {
+  text-decoration: none;
+}
+
+.textlink:hover,
+.story:hover h3,
+.card:hover b {
+  color: #bf490d;
+}
+
+.button:hover {
+  background-color: #ff843f;
+}
+
+.tile:hover span {
+  color: #ffe3d3;
+}
+
+.sector-copy,
+.catalogue-guide > div,
+.dual > div:has(> .textlink) {
+  display: flex;
+  flex-direction: column;
+}
+
+.sector-copy {
+  align-self: stretch;
+}
+
+.sector-copy > .textlink,
+.catalogue-copy > .textlink,
+.catalogue-guide > div > .textlink,
+.dual > div > .textlink {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 0.9rem;
+}
