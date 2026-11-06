@@ -303,18 +303,24 @@ interior('projects','Project Enquiries','Discuss wire and strand requirements fo
     feature('Start with the design requirement', ['Tell us what you are building, which product the design specifies and what standard applies. Include the project location, procurement stage, quantities and delivery timetable.'], 'infra','Illustrative infrastructure application','/sectors/','Browse applications'),
     feature('Prepare the procurement package', ['Share inspection or documentation requirements early, especially where a consultant or authority must review the material. Include packaging or handling constraints for staged deliveries.'], 'hero','Illustrative steel strand','/contact/','Discuss your project')
 ))
+quote_products = ''.join(f'<option>{escape(name)}</option>' for name, *_ in products)
 contact_content = f"""
 <div class="contact-grid">
   <section id="quote" class="quote-panel">
     <span class="eyebrow">Sales enquiries</span>
     <h2 class="rule">Find out more</h2>
     <p>Tell us what you need. Include the specification and delivery requirements if you have them.</p>
-    <ul>
-      <li>Product, application and applicable standard</li>
-      <li>Quantity, delivery destination and required date</li>
-      <li>Any packaging, testing or documentation requirements</li>
-    </ul>
-    {button('mailto:sales@essensteel.com?subject=Essen%20Steel%20quote%20enquiry', 'Email sales for a quote')}
+    <form id="quote-form">
+      <div class="quote-fields">
+        <label>Name<input name="Name" autocomplete="name" required></label>
+        <label>Company<input name="Company" autocomplete="organization" required></label>
+        <label>Work email<input name="Work email" type="email" autocomplete="email" required></label>
+        <label>Product<select name="Product"><option value="">Select a product</option>{quote_products}<option>Help me choose</option></select></label>
+      </div>
+      <label>Project or order details<textarea name="Project or order details" rows="5" placeholder="Application, grade or standard, quantity, destination and required date" required></textarea></label>
+      <button class="button" type="submit">Email enquiry →</button>
+    </form>
+    <noscript><p>Email your enquiry to <a href="mailto:sales@essensteel.com">sales@essensteel.com</a>.</p></noscript>
   </section>
   <aside class="contact-aside">
     {photo('industrial-hall','Illustrative steel wire production hall','contact-photo')}
@@ -330,6 +336,7 @@ contact_content = f"""
   <div><h2>Need technical documents?</h2><p>Share the product and governing standard or tell us which test report or certificate your project requires.</p><a class="textlink" href="/downloads/">Technical resources →</a></div>
   <div><h2>Discuss a supply requirement</h2><p>For staged deliveries or specialist handling, include the delivery window, packaging and receiving constraints in your enquiry.</p><a class="textlink" href="/partnership/">Partnership and supply →</a></div>
 </div>
+<script src="/assets/contact.js" defer></script>
 """
 interior('contact','Contact Essen Steel','Speak to the sales team about a quote, product specification or delivery requirement.',contact_content)
 interior('insights','Insights','Practical guides to steel strand and technical documentation.',stories_grid())
