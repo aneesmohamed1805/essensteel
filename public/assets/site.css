@@ -169,3 +169,6 @@ main > .section > .dual:has(> div > a[href="/partnership/"])::after {
 .subnav ul{position:absolute;z-index:10;inset-block-start:100%;inset-inline-start:-3rem;min-width:13rem;width:max-content;margin:.25rem 0 0;padding:.35rem;list-style:none;background:#fff;border:1px solid #ddd;box-shadow:0 6px 18px #0002}
 .subnav li a{display:block;padding:.6rem .75rem}
 .subnav li a:hover{background:#f3f3f3;color:#a83800;text-decoration:none}
+
+.corporate-nav>summary{display:flex;gap:.5rem;min-height:0;font-weight:600}
+.corporate-nav>ul{inset-inline-start:0}

@@ -61,14 +61,18 @@ def page(path,title,description,body):
     body = place_images(path, body)
     links = ''.join(link('/'+slug+'/',name) for name,slug in nav)
     submenus = {
-        'about': [('/partnership/', 'Partnership & Supply')],
+        'corporate': [('/about/', 'About'), ('/partnership/', 'Partnership & Supply')],
         'technology': [('/standards/', 'Quality'), ('/downloads/', 'Technical Resources')],
     }
     main_links = []
-    for name, slug in [('About', 'about'), *nav]:
+    for name, slug in [('Corporate', 'corporate'), *nav]:
         parent = link('/'+slug+'/', name)
         if slug in submenus:
             children = ''.join(f'<li>{link(path, label)}</li>' for path, label in submenus[slug])
+            if slug == 'corporate':
+                parent = f'<details class="subnav corporate-nav"><summary>Corporate<span aria-hidden="true"></span></summary><ul>{children}</ul></details>'
+                main_links.append(parent)
+                continue
             parent = f"""<div class="nav-group">{parent}
               <details class="subnav">
                 <summary aria-label="{name} submenu"><span aria-hidden="true"></span></summary>
