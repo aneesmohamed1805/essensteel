@@ -49,8 +49,32 @@ def page(path,title,description,body):
 {link('/about/','About')}{link('/projects/','Projects')}{link('/privacy-policy/','Privacy')}{link('/cookies/','Cookies')}</nav></div></div></footer>
 </body></html>''',encoding='utf-8')
 
+pantheon_media = 'https://dev-essen-steel-2.pantheonsite.io/wp-content/uploads/2026/03/'
+interior_visuals = {
+    'about': ('factory', ''),
+    'technology': ('factory', 'essen-manufacturing.webp'),
+    'standards': ('mill', ''),
+    'sustainability': ('factory', ''),
+    'sectors': ('infra', 'essen-products-banner.webp'),
+}
+
+def visual_style(fallback, source=''):
+    layers = [f'url(/assets/{fallback}.webp)']
+    if source:
+        layers.insert(0, f'url({pantheon_media}{source})')
+    return ','.join(layers)
+
 def interior(path,title,desc,content):
-    page(path,title,desc,f'<div class="intro"><div class="wrap"><h1>{escape(title)}</h1><p>{escape(desc)}</p></div></div>{section(content,"prose")}')
+    visual = interior_visuals.get(path)
+    if path.startswith('products/'):
+        visual = (path.split('/')[1], '')
+    intro_class = 'intro'
+    art = ''
+    if visual:
+        intro_class += ' intro-visual'
+        art = f'<div class="intro-art" style="background-image:{visual_style(*visual)}" aria-hidden="true"></div>'
+    body_class = '' if path == 'sectors' else 'prose'
+    page(path,title,desc,f'<div class="{intro_class}">{art}<div class="wrap"><h1>{escape(title)}</h1><p>{escape(desc)}</p></div></div>{section(content,body_class)}')
 
 def cards():
     return '<div class="grid">'+''.join(f'<a class="card" href="/products/{key}/"><span>{escape(name)}<br><b aria-hidden="true">→</b></span>{photo(key)}</a>' for name,key,_,_ in products)+'</div>'
@@ -91,16 +115,25 @@ product_notes = {
 }
 for name,key,desc,uses in products:
     query = {'pc':'infra','acsr':'power','spring':'bedding'}.get(key,'other')
-    interior(f'products/{key}',name,desc,photo(key,'Illustrative product detail','detail-photo')+f'<h2>Applications</h2><p>{uses}</p>'+link('/sectors/#'+query,'View applications','textlink')+f'<h2>Discuss your specification</h2><p>{product_notes[key]}</p><p>Include your quantity, delivery destination and target date when requesting a quote.</p>'+button('/contact/','Request a Quote')+' <p>'+link('/downloads/','Request product documentation','textlink')+'</p>')
-app_content = """
-<section id="infra"><h2>Infrastructure and construction</h2><p>Prestressing strand is specified for concrete structures such as bridges, rail infrastructure and buildings. The structural design establishes the grade and dimensions. Include the governing standard and test documentation in your enquiry.</p><a class="textlink" href="/products/pc/">Explore PC Strand</a></section>
-<section id="power"><h2>Power transmission</h2><p>In an ACSR conductor, the steel core provides reinforcement for the surrounding aluminium wires. Share the conductor designation and core specification when enquiring about steel core wire or strand.</p><a class="textlink" href="/products/acsr/">Explore ACSR Steel Core Wire and Strand</a></section>
-<section id="bedding"><h2>Bedding and manufacturing</h2><p>Mattress manufacturers form steel spring wire into components for bedding assemblies. Wire diameter, required mechanical properties and pack format are useful starting points for an enquiry.</p><a class="textlink" href="/products/spring/">Explore Mattress Spring Wire</a></section>
-<section id="other"><h2>Agriculture, fencing and industrial applications</h2><p>Galvanised and specialist wires serve fencing, agricultural and industrial uses, including nail manufacture and cable armouring. Confirm the intended use and coating requirements when selecting the wire.</p><a class="textlink" href="/products/galv/">Explore Galvanised Steel Wire</a></section>
-<section><h2>Telecommunications and cable installation</h2><p>For duct and cable work, identify how the wire will be used and share the dimensions and installation requirements. For cable armouring enquiries, include the relevant wire and coating specification.</p><a class="textlink" href="/products/duct/">Explore Duct Wire</a></section>
-"""
-interior('sectors','Industries and Applications','Find the wire or strand used in your application.',app_content)
-interior('technology','Manufacturing and Technology','Steel wire and strand production in Kizad, Abu Dhabi.',photo('factory','Illustrative wire production line','detail-photo')+"""
+    interior(f'products/{key}',name,desc,f'<h2>Applications</h2><p>{uses}</p>'+link('/sectors/#'+query,'View applications','textlink')+f'<h2>Discuss your specification</h2><p>{product_notes[key]}</p><p>Include your quantity, delivery destination and target date when requesting a quote.</p>'+button('/contact/','Request a Quote')+' <p>'+link('/downloads/','Request product documentation','textlink')+'</p>')
+sector_details = [
+    ('infra','Infrastructure','infra','essen-infrastructure.webp','Prestressing strand is used in concrete bridges, rail infrastructure and other civil works. Share the governing standard, strand designation and test documentation required by the structural design.','pc','PC Strand'),
+    ('construction','Construction','infra','essen-construction-b.webp','Prestressed concrete elements are used in buildings and other structures. Confirm the specified strand, nominal diameter, packaging and handling requirements with the project team.','pc','PC Strand'),
+    ('power','Power Transmission','power','','Steel core wire and strand reinforce the aluminium wires in ACSR overhead conductors. Include the conductor designation and the steel core construction in your enquiry.','acsr','ACSR Steel Core Wire and Strand'),
+    ('telecommunications','Telecommunications','duct','essen-telecommunication.webp','Duct wire is used in cable installation. Steel wire may also be specified for cable armouring. Share how the wire will be used, along with dimensions, coating requirements and the governing specification.','duct','Duct Wire'),
+    ('other','Agriculture and Fencing','galv','essen-fencing.webp','Galvanised steel wire is used for agricultural and fencing applications. Include the wire diameter, coating requirements and intended installation or downstream process.','galv','Galvanised Steel Wire'),
+    ('manufacturing','Manufacturing','factory','essen-manufacturing.webp','Industrial buyers use steel wire for applications such as nail manufacture, cable armouring and other downstream processing. Share the forming process and the mechanical and packaging requirements.','special','Specialist Wires'),
+    ('bedding','Bedding','bedding','','Mattress manufacturers form spring wire into components for bedding assemblies. Tell us the wire diameter, required mechanical properties and pack format for your forming equipment.','spring','Mattress Spring Wire'),
+]
+sector_nav = '<nav class="sector-nav" aria-label="Jump to sector">'+''.join(link('#'+key,title) for key,title,*_ in sector_details)+'</nav>'
+sector_panels = []
+for key,title,fallback,source,body,product,label in sector_details:
+    art = f'<div class="sector-art" style="background-image:{visual_style(fallback,source)}" aria-hidden="true"></div>'
+    copy = f'<div class="sector-copy"><h2>{title}</h2><p>{body}</p>{link("/products/"+product+"/",label+" →","textlink")}</div>'
+    sector_panels.append(f'<section class="sector-panel" id="{key}">{art}{copy}</section>')
+app_content = sector_nav+'<div class="sector-panels">'+''.join(sector_panels)+'</div>'
+interior('sectors','Industries and Applications','Explore how Essen Steel wire and strand are used across infrastructure, construction, power, telecommunications, agriculture, fencing and manufacturing.',app_content)
+interior('technology','Manufacturing and Technology','Steel wire and strand production in Kizad, Abu Dhabi.',"""
 <section><h2>Wire drawing and stranding</h2><p>Wire drawing reduces the material to the diameter required for the order. Where the product is a strand, individual wires are formed into the specified construction. The required dimensions and mechanical properties depend on the product and its application.</p></section>
 <section><h2>Finishing and galvanising</h2><p>Finishing depends on the intended use. For galvanised products, the coating specification forms part of the order alongside the wire dimensions and mechanical requirements.</p></section>
 <section><h2>Testing and traceability</h2><p>Inspection and testing connect the manufacturing process to the buyer’s specification. Agree the relevant dimensional, mechanical and coating checks, along with any test reports and material identification required for delivery.</p></section>
