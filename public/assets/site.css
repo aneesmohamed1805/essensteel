@@ -117,3 +117,33 @@ main > .section:has(> .row > a[href="/insights/"]) .rule::after {
   aspect-ratio: 3 / 2;
   object-fit: cover;
 }
+
+/* Match the inset Insights panel, with a divider for the two resource columns. */
+main > .section:has(> .dual > div > a[href="/partnership/"]) {
+  background: #f3f3f3;
+  padding-inline: clamp(1rem, 3vw, 2.5rem);
+}
+
+main > .section > .dual:has(> div > a[href="/partnership/"]) {
+  position: relative;
+}
+
+main > .section > .dual:has(> div > a[href="/partnership/"])::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  border-left: 1px solid #d9d9d9;
+  pointer-events: none;
+}
+
+@media (max-width: 460px) {
+  main > .section > .dual:has(> div > a[href="/partnership/"])::after {
+    display: none;
+  }
+
+  main > .section > .dual:has(> div > a[href="/partnership/"]) > div + div {
+    border-top: 1px solid #d9d9d9;
+    padding-top: 1.2rem;
+  }
+}
