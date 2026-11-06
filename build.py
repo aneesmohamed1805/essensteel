@@ -147,7 +147,7 @@ interior('technology','Manufacturing and Technology','From drawn wire to finishe
     feature('Drawing and stranding', [
         'Drawing reduces steel wire to the diameter required for its next operation. For a strand, individual wires are formed into the required construction. Prestressing strand and ACSR steel core strand serve different applications and need their own order specifications.',
         'Start with the product designation and governing standard. Those details help establish which dimensions, mechanical properties and construction need to be checked.'
-    ], 'factory','Illustrative wire-drawing line','/products/','Explore the product range'),
+    ], 'industrial-hall','Illustrative wire-drawing line','/products/','Explore the product range'),
     feature('Finishing and coating', [
         'The intended application determines how wire is finished. Where zinc coating is specified, state the required coating alongside wire diameter and mechanical properties. Fencing, cable armouring and downstream forming may call for different requirements.',
         'If the wire runs through forming or feeding equipment, tell us how it is handled and what coil or pack arrangement that equipment accepts.'
