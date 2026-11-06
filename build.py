@@ -231,12 +231,15 @@ for key,title,asset,body,product,label in sector_details:
     sector_panels.append(f'<section class="sector-panel" id="{key}">{art}{copy}</section>')
 app_content = sector_nav+'<div class="sector-panels">'+''.join(sector_panels)+'</div>'
 interior('sectors','Industries and Applications','Explore how Essen Steel wire and strand are used across infrastructure, construction, power, telecommunications, agriculture, fencing and manufacturing.',app_content)
-green_manufacturing = """
+green_manufacturing = f"""
 <section class="green-manufacturing" id="green-manufacturing">
+  {photo('green-overview', 'Illustrative steel wire offcuts collected beside wire coils')}
+  <div class="green-manufacturing-copy">
   <h2 class="rule">Green Manufacturing</h2>
   <p>Responsible manufacturing starts with how steel wire is drawn, finished and packed. Energy use in production, material yield and the handling of steel offcuts are useful areas to review when assessing a wire or strand supply chain.</p>
   <p>For a supplier assessment or tender, specify the product or facility, the reporting period and the evidence you need. Facility energy figures and product-level environmental information answer different questions.</p>
   <a class="textlink" href="/sustainability/">Explore responsible manufacturing →</a>
+  </div>
 </section>"""
 interior('technology','Manufacturing and Technology','From drawn wire to finished strand, see how the specification carries through production and supply.',feature_group(
     feature('Drawing and stranding', [
