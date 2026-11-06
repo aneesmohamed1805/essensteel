@@ -60,16 +60,23 @@ def place_images(path, body):
 def page(path,title,description,body):
     body = place_images(path, body)
     links = ''.join(link('/'+slug+'/',name) for name,slug in nav)
-    about_menu = '''<div class="about-nav">
-      <a href="/about/">About</a>
-      <details class="about-subnav">
-        <summary aria-label="About submenu"><span aria-hidden="true"></span></summary>
-        <ul>
-          <li><a href="/downloads/">Technical Resources</a></li>
-          <li><a href="/partnership/">Partnership &amp; Supply</a></li>
-        </ul>
-      </details>
-    </div>'''
+    submenus = {
+        'about': ('/partnership/', 'Partnership & Supply'),
+        'technology': ('/downloads/', 'Technical Resources'),
+        'standards': ('/downloads/', 'Technical Resources'),
+    }
+    main_links = []
+    for name, slug in [('About', 'about'), *nav]:
+        parent = link('/'+slug+'/', name)
+        if slug in submenus:
+            child = link(*submenus[slug])
+            parent = f"""<div class="nav-group">{parent}
+              <details class="subnav">
+                <summary aria-label="{name} submenu"><span aria-hidden="true"></span></summary>
+                <ul><li>{child}</li></ul>
+              </details></div>"""
+        main_links.append(parent)
+    main_menu = ''.join(main_links)
     footer_links = link('/about/','About') + links
     logo = '<a href="/" aria-label="Essen Steel home"><img class="logo" src="/assets/logo.webp" alt="Essen Steel" width="1511" height="778"></a>'
     target = root / path / 'index.html' if path != '404.html' else root / path
@@ -82,7 +89,7 @@ def page(path,title,description,body):
 <meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="/assets/site.css"></head>
 <body><a class="skip" href="#main">Skip to content</a>
-<header class="wrap bar">{logo}<nav aria-label="Main">{about_menu}{links}</nav></header>
+<header class="wrap bar">{logo}<nav aria-label="Main">{main_menu}</nav></header>
 <main id="main">{body}</main>
 <footer class="footer"><div class="wrap"><div class="bar">{logo}<nav aria-label="Footer">{footer_links}</nav></div>
 <div class="row"><span>© 2026 Essen Steel</span><nav aria-label="Company">

@@ -160,12 +160,12 @@ main > .section > .dual:has(> div > a[href="/partnership/"])::after {
 .insight-body h2{font-size:clamp(1.35rem,2.5vw,1.9rem);margin:1.55em 0 .5em}
 .insight-article-footer{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;border-top:1px solid #ddd;margin-top:2rem;padding-top:1.2rem}
 
-.about-nav{display:inline-flex;align-items:center;gap:.15rem}
-.about-subnav{position:relative}
-.about-subnav summary{display:grid;place-items:center;min-width:1.65rem;min-height:1.65rem;cursor:pointer;list-style:none}
-.about-subnav summary::-webkit-details-marker{display:none}
-.about-subnav summary span{width:.45rem;height:.45rem;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin-top:-.2rem}
-.about-subnav[open] summary span{transform:rotate(225deg);margin-top:.2rem}
-.about-subnav ul{position:absolute;z-index:10;inset-block-start:100%;inset-inline-start:-3rem;min-width:13rem;width:max-content;margin:.25rem 0 0;padding:.35rem;list-style:none;background:#fff;border:1px solid #ddd;box-shadow:0 6px 18px #0002}
-.about-subnav li a{display:block;padding:.6rem .75rem}
-.about-subnav li a:hover{background:#f3f3f3;color:#a83800;text-decoration:none}
+.nav-group{display:inline-flex;align-items:center;gap:.15rem}
+.subnav{position:relative}
+.subnav summary{display:grid;place-items:center;min-width:1.65rem;min-height:1.65rem;cursor:pointer;list-style:none}
+.subnav summary::-webkit-details-marker{display:none}
+.subnav summary span{width:.45rem;height:.45rem;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin-top:-.2rem}
+.subnav[open] summary span{transform:rotate(225deg);margin-top:.2rem}
+.subnav ul{position:absolute;z-index:10;inset-block-start:100%;inset-inline-start:-3rem;min-width:13rem;width:max-content;margin:.25rem 0 0;padding:.35rem;list-style:none;background:#fff;border:1px solid #ddd;box-shadow:0 6px 18px #0002}
+.subnav li a{display:block;padding:.6rem .75rem}
+.subnav li a:hover{background:#f3f3f3;color:#a83800;text-decoration:none}
