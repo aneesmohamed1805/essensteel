@@ -172,3 +172,13 @@ main > .section > .dual:has(> div > a[href="/partnership/"])::after {
 
 .corporate-nav>summary{display:flex;gap:.5rem;min-height:0;font-weight:600}
 .corporate-nav>ul{inset-inline-start:0}
+
+/* Keep standalone actions clear of adjacent content. */
+main :is(.sector-panels, p, label) + .button,
+main .button + p {
+  margin-block-start: 1rem;
+}
+
+main .sector-panels + .button {
+  margin-block-start: clamp(1.25rem, 3vw, 2rem);
+}
