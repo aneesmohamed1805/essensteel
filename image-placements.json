@@ -1,0 +1,119 @@
+{
+  "": [
+    "slot-matching-2",
+    "slot-core-0",
+    "slot-products-3",
+    "slot-coils-2",
+    "slot-products-2",
+    "slot-wire-2",
+    "home-power",
+    "home-infra",
+    "home-bedding",
+    "insight-strand",
+    "insight-report"
+  ],
+  "about": [
+    "about-editorial",
+    "slot-plant-1",
+    "slot-civil-1",
+    "slot-quality-3|Illustrative steel samples and measuring tools on an inspection bench"
+  ],
+  "contact": [
+    "contact-editorial",
+    "slot-matching-0|Illustrative bound steel wire coils at a dispatch bay"
+  ],
+  "downloads": [
+    "slot-engineering-0",
+    "slot-matching-1|Illustrative strand specimen beside a technical sheet",
+    "slot-article-2|Illustrative round steel wire coil with identification label and inspection clipboard"
+  ],
+  "insights": [
+    "slot-engineering-2",
+    "slot-details-0",
+    "slot-matching-3"
+  ],
+  "insights/mill-test-report": [
+    "slot-engineering-3",
+    "slot-quality-2|Illustrative traceability tag and inspection clipboard beside a steel coil"
+  ],
+  "insights/pc-strand": [
+    "slot-civil-3",
+    "slot-article-0|Illustrative lengths of steel prestressing strand on an inspection bench"
+  ],
+  "partnership": [
+    "slot-supply-0",
+    "slot-use-2|Illustrative steel wire and wire-forming equipment",
+    "slot-supply-1|Illustrative steel coils secured for transport"
+  ],
+  "products": [
+    "catalogue-editorial",
+    "slot-civil-0",
+    "slot-core-1",
+    "slot-applications-2",
+    "slot-applications-3",
+    "slot-context-2",
+    "slot-details-1"
+  ],
+  "products/acsr": [
+    "catalogue-acsr",
+    "slot-applications-1",
+    "slot-products-0"
+  ],
+  "products/duct": [
+    "catalogue-duct",
+    "slot-details-2|Illustrative telecom conduits entering a concrete service chamber",
+    "slot-context-3|Illustrative cable installation wire coil"
+  ],
+  "products/galv": [
+    "catalogue-galv",
+    "slot-coils-1",
+    "slot-coils-0"
+  ],
+  "products/pc": [
+    "catalogue-pc",
+    "slot-use-0|Illustrative precast girder production bed",
+    "slot-article-1|Illustrative strand samples beside a concrete specimen and inspection record"
+  ],
+  "products/special": [
+    "catalogue-special",
+    "slot-wire-1",
+    "slot-wire-0"
+  ],
+  "products/spring": [
+    "catalogue-spring",
+    "slot-coils-3",
+    "slot-products-1"
+  ],
+  "projects": [
+    "slot-civil-2",
+    "slot-applications-0",
+    "slot-article-3|Illustrative prestressing strand specimen beside a concrete bridge bearing"
+  ],
+  "sectors": [
+    "sector-infrastructure",
+    "slot-process-0",
+    "construction",
+    "power",
+    "duct",
+    "galv",
+    "special",
+    "bedding"
+  ],
+  "standards": [
+    "quality-editorial",
+    "slot-process-3",
+    "mill",
+    "slot-context-1"
+  ],
+  "sustainability": [
+    "sustainability-editorial",
+    "slot-plant-3|Illustrative wire reels and separated steel offcuts on a production floor",
+    "slot-context-0|Illustrative outdoor wire mesh fencing"
+  ],
+  "technology": [
+    "technology-editorial",
+    "slot-plant-2",
+    "slot-process-1",
+    "slot-process-2|Illustrative strapped coil and packing station"
+  ]
+}
