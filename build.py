@@ -62,7 +62,7 @@ def page(path,title,description,body):
     links = ''.join(link('/'+slug+'/',name) for name,slug in nav)
     submenus = {
         'corporate': [('/about/', 'About'), ('/partnership/', 'Partnership & Supply')],
-        'technology': [('/technology/', 'Manufacturing Overview'), ('/technology/#green-manufacturing', 'Green Manufacturing'), ('/standards/', 'Quality'), ('/downloads/', 'Technical Resources')],
+        'technology': [('/technology/', 'Manufacturing & Technology'), ('/technology/#green-manufacturing', 'Green Manufacturing'), ('/standards/', 'Quality'), ('/downloads/', 'Technical Resources')],
     }
     main_links = []
     for name, slug in [('Corporate', 'corporate'), *nav]:
