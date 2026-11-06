@@ -15,7 +15,7 @@ GitHub: aneesmohamed1805/essensteel was empty at inspection. Cloudflare: Worker 
 ## Publication checks
 
 - Keep /about/, /technology/, /standards/, /sectors/, /projects/ and /contact/ when reconciling the public URL inventory. /products/ and its six detail pages, /downloads/, /partnership/, /sustainability/ and /insights/ are included. Crawl existing deep links before cutover and map any retired URL to its closest replacement. Confirm sitewide canonicals and sitemap against the final domain.
-- The contact and documentation CTAs use the sales address shown on Pantheon and the public website. They open the visitor’s email app. Connect and test a form endpoint if browser-based submission is required.
+- The contact and documentation CTAs use the sales address shown on Pantheon and the public website. Connect and test the Mailgun-backed enquiry form before enabling browser-based submission.
 - Technical information is limited to product families and intended uses sourced from Pantheon. Match grades, dimensions, coating, packaging, strand construction and technical downloads to approved data sheets. Review the draft insights before publication.
 - Obtain certificates with issuing body, scope and validity before adding ISO, product certification or authority approval claims. Review the board’s “Green Manufacturing” label and confirm evidence before publishing environmental benefits. Capacity, export destinations, project names, leadership and performance guarantees require separate evidence and approval. Review privacy and cookie copy against the final services.
 
