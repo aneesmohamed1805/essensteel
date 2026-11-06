@@ -62,22 +62,14 @@ def page(path,title,description,body):
     links = ''.join(link('/'+slug+'/',name) for name,slug in nav)
     submenus = {
         'corporate': [('/about/', 'About'), ('/partnership/', 'Partnership & Supply')],
-        'technology': [('/standards/', 'Quality'), ('/downloads/', 'Technical Resources')],
+        'technology': [('/technology/', 'Manufacturing Overview'), ('/technology/#green-manufacturing', 'Green Manufacturing'), ('/standards/', 'Quality'), ('/downloads/', 'Technical Resources')],
     }
     main_links = []
     for name, slug in [('Corporate', 'corporate'), *nav]:
         parent = link('/'+slug+'/', name)
         if slug in submenus:
             children = ''.join(f'<li>{link(path, label)}</li>' for path, label in submenus[slug])
-            if slug == 'corporate':
-                parent = f'<details class="subnav corporate-nav"><summary>Corporate<span aria-hidden="true"></span></summary><ul>{children}</ul></details>'
-                main_links.append(parent)
-                continue
-            parent = f"""<div class="nav-group">{parent}
-              <details class="subnav">
-                <summary aria-label="{name} submenu"><span aria-hidden="true"></span></summary>
-                <ul>{children}</ul>
-              </details></div>"""
+            parent = f'<details class="subnav corporate-nav"><summary>{name}<span aria-hidden="true"></span></summary><ul>{children}</ul></details>'
         main_links.append(parent)
     main_menu = ''.join(main_links)
     footer_links = link('/about/','About') + links
@@ -239,6 +231,13 @@ for key,title,asset,body,product,label in sector_details:
     sector_panels.append(f'<section class="sector-panel" id="{key}">{art}{copy}</section>')
 app_content = sector_nav+'<div class="sector-panels">'+''.join(sector_panels)+'</div>'
 interior('sectors','Industries and Applications','Explore how Essen Steel wire and strand are used across infrastructure, construction, power, telecommunications, agriculture, fencing and manufacturing.',app_content)
+green_manufacturing = """
+<section class="green-manufacturing" id="green-manufacturing">
+  <h2 class="rule">Green Manufacturing</h2>
+  <p>Responsible manufacturing starts with how steel wire is drawn, finished and packed. Energy use in production, material yield and the handling of steel offcuts are useful areas to review when assessing a wire or strand supply chain.</p>
+  <p>For a supplier assessment or tender, specify the product or facility, the reporting period and the evidence you need. Facility energy figures and product-level environmental information answer different questions.</p>
+  <a class="textlink" href="/sustainability/">Explore responsible manufacturing →</a>
+</section>"""
 interior('technology','Manufacturing and Technology','From drawn wire to finished strand, see how the specification carries through production and supply.',feature_group(
     feature('Drawing and stranding', [
         'Drawing reduces steel wire to the diameter required for its next operation. For a strand, individual wires are formed into the required construction. Prestressing strand and ACSR steel core strand serve different applications and need their own order specifications.',
@@ -252,7 +251,7 @@ interior('technology','Manufacturing and Technology','From drawn wire to finishe
         'A labelled coil and its inspection record give the receiving team two points to match before material enters production. Agree the identifiers, report format and checks required for the order before packing and dispatch.',
         'Confirm the pack configuration, quantity, destination and delivery window before ordering. Let us know about unloading restrictions or staging requirements.'
     ],'mill','Illustrative coil tag and inspection worksheet','/standards/','Review quality and documentation')
-))
+)+green_manufacturing)
 interior('standards','Quality and Certifications','What engineers and procurement teams should agree before ordering and check when receiving material.',feature_group(
     feature('Agree the acceptance criteria', [
         'Coiled wire and finished strand can look similar at a glance while serving very different functions. The purchase specification identifies the product, grade and dimensions and sets the acceptance criteria for that material.',

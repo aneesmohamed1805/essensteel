@@ -187,3 +187,7 @@ main .sector-panels + .button {
 main > .hero + .section:has(> .steps) {
   padding-block: clamp(3rem, 7vw, 6rem);
 }
+
+.green-manufacturing{background:#f3f3f3;margin-top:clamp(1.5rem,4vw,3rem);padding:clamp(1.25rem,4vw,3rem);scroll-margin-top:1rem}
+.green-manufacturing p{max-width:72ch}
+.green-manufacturing>.textlink{display:inline-block;margin-top:.75rem}
