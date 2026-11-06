@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 
 root = Path(__file__).parent / 'public'
-nav = [('About','about'),('Products','products'),('Applications','sectors'),('Manufacturing','technology'),('Quality','standards'),('Contact','contact')]
+nav = [('About','about'),('Products','products'),('Applications','sectors'),('Manufacturing','technology'),('Quality','standards'),('Insights','insights'),('Contact','contact')]
 products = [
  ('PC Strand','pc','Prestressing strand for concrete structures such as bridges, rail infrastructure and buildings.','Infrastructure'),
  ('ACSR Steel Core Wire & Strand','acsr','Steel core wire and strand for aluminium conductor steel reinforced (ACSR) used in overhead power transmission. Essen supplies the steel core component.','Power Transmission'),
@@ -15,6 +15,7 @@ products = [
  ('Specialist Wires','special','Wire for cable armouring, fencing, nail manufacture and agricultural applications.','Industrial and agricultural use'),
 ]
 applications = [('Power Transmission','power','acsr'),('Infrastructure','infra','pc'),('Bedding','bedding','spring')]
+# Add new articles at the top. The homepage displays the first two.
 stories = [
  ('Understanding PC Strand','pc-strand','pc','How prestressing strand is used in concrete construction.','Prestressing puts the concrete into compression. PC strand carries the tensile force that is transferred to the concrete according to the structural design. When ordering, confirm the required grade, nominal diameter, governing standard, packaging and documentation with your technical team.'),
  ('What to Check in a Mill Test Report','mill-test-report','mill','How to check the report against your order and delivered material.','Start by matching the report identifier and batch or coil reference against the delivered material. Compare the reported grade, dimensions and test results with the requirements in your purchase order and applicable standard. Ask the supplier to clarify any missing values or discrepancies before releasing the material for use.'),
@@ -41,6 +42,8 @@ image_placements = json.loads(Path(__file__).with_name('image-placements.json').
 image_reference = re.compile(r'/assets/[\w-]+\.webp(?:" alt="[^"]*")?')
 
 def place_images(path, body):
+    if path.startswith('insights/') and path not in image_placements:
+        return body
     planned = image_placements.get(path, [])
     actual = list(image_reference.finditer(body))
     if len(actual) != len(planned):
@@ -110,8 +113,16 @@ def cards():
 def tiles():
     return '<div class="grid">'+''.join(f'<a class="tile" href="/sectors/#{img}" style="background-image:linear-gradient(0deg,#000d,transparent 90%),url(/assets/{img}.webp)"><span>{name}</span></a>' for name,img,_ in applications)+'</div>'
 
-def stories_grid():
-    return '<div class="dual">'+''.join(f'<a class="story" href="/insights/{slug}/">{photo(img)}<div><h3>{title}</h3><p>{desc}</p></div></a>' for title,slug,img,desc,_ in stories)+'</div>'
+def stories_grid(*, homepage=False):
+    selected = stories[:2] if homepage else stories
+    prefix = 'home' if homepage else 'index'
+    cards = []
+    for title, slug, _, desc, _ in selected:
+        src = f'/assets/insights/{prefix}-{slug}.webp'
+        if not (root / src.lstrip('/')).is_file():
+            raise FileNotFoundError(src)
+        cards.append(f'<a class="story" href="/insights/{slug}/"><img src="{src}" alt="" loading="lazy"><div><h3>{escape(title)}</h3><p>{escape(desc)}</p></div></a>')
+    return '<div class="dual">' + ''.join(cards) + '</div>' 
 
 def heading(label):
     return f'<h2 class="rule">{label}</h2>'
@@ -122,7 +133,7 @@ factory = '<div class="factory"><div class="factory-inner"><div class="wrap"><sp
 hero = '<section class="hero"><img class="outline" src="/assets/outline.png" alt=""><div class="wrap"><h1>Steel Wire. Steel Strand.</h1><p>Made in Abu Dhabi for concrete infrastructure, overhead power networks and industrial production.</p>'+button('/products/','Explore Products')+'<small class="hero-caption">Illustrative infrastructure project</small></div></section>'
 resources = '''<div class="dual"><div><span class="eyebrow">Technical Resources</span><h2 class="normal">Product Data and Documentation</h2><p>Request the specification and documentation for your application.</p><a class="textlink" href="/downloads/">View Technical Resources →</a></div>
 <div><span class="eyebrow">Partnership</span><h2 class="normal">A Better Supply Partnership</h2><p>Discuss your specification, quantity and delivery requirements with Essen Steel.</p><a class="textlink" href="/partnership/">Work With Us →</a></div></div>'''
-page('', 'Steel Wire & Strand Manufacturer in the UAE','Explore Essen Steel wire and strand products, applications and technical resources. Request a quote from the sales team.',hero+section(heading('Our Process')+process)+factory+section(heading('Our Products')+cards())+section(resources)+section(heading('Applications')+tiles())+section('<div class="row">'+heading('Insights')+link('/insights/','View all insights →','textlink')+'</div>'+stories_grid()))
+page('', 'Steel Wire & Strand Manufacturer in the UAE','Explore Essen Steel wire and strand products, applications and technical resources. Request a quote from the sales team.',hero+section(heading('Our Process')+process)+factory+section(heading('Our Products')+cards())+section(resources)+section(heading('Applications')+tiles())+section('<div class="row">'+heading('Insights')+link('/insights/','View all insights →','textlink')+'</div>'+stories_grid(homepage=True)))
 product_context = {
     'pc': ('Concrete infrastructure', 'infra'),
     'acsr': ('Overhead power transmission', 'power'),

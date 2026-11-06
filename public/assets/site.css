@@ -110,3 +110,10 @@ main > .section:has(> .row > a[href="/insights/"]) {
 main > .section:has(> .row > a[href="/insights/"]) .rule::after {
   display: none;
 }
+
+.story > img {
+  flex: 0 0 30%;
+  width: 30%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}

@@ -20,3 +20,7 @@ GitHub: aneesmohamed1805/essensteel was empty at inspection. Cloudflare: Worker 
 - Obtain certificates with issuing body, scope and validity before adding ISO, product certification or authority approval claims. Review the board’s “Green Manufacturing” label and confirm evidence before publishing environmental benefits. Capacity, export destinations, project names, leadership and performance guarantees require separate evidence and approval. Review privacy and cookie copy against the final services.
 
 The Git-backed review project is `essensteel-git-review` on Cloudflare Pages. It builds from `review` and serves the `public/` directory without a build command. Review URL: https://essensteel-git-review.pages.dev/.
+
+### Add an Insight
+
+Add the article at the top of the `stories` list in `build.py`. The Insights index shows the full list and the homepage shows its first two entries. Add distinct `home-<slug>.webp` and `index-<slug>.webp` thumbnails under `public/assets/insights/`, and put the article image named in the story entry under `public/assets/`. Regenerate the static pages with `python3 build.py` and commit the source, assets and generated HTML together.

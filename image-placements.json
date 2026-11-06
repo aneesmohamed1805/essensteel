@@ -8,9 +8,7 @@
     "slot-wire-2",
     "home-power",
     "home-infra",
-    "home-bedding",
-    "insight-strand",
-    "insight-report"
+    "home-bedding"
   ],
   "about": [
     "about-editorial",
@@ -28,9 +26,7 @@
     "slot-article-2|Illustrative round steel wire coil with identification label and inspection clipboard"
   ],
   "insights": [
-    "slot-engineering-2",
-    "slot-details-0",
-    "slot-matching-3"
+    "slot-engineering-2"
   ],
   "insights/mill-test-report": [
     "slot-engineering-3",
