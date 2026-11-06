@@ -52,3 +52,40 @@
 .hero p{max-width:49ch;margin-bottom:1.25rem}.hero-caption{display:block;margin-top:1rem;color:#fff;font-size:.78rem}.hero .outline{opacity:.7}
 img.sector-art{width:100%;height:100%;object-fit:cover}
 @media(max-width:680px){img.sector-art{height:235px}}
+
+:root{--panel-grey:#f3f3f3}
+main .textlink,main .textlink:hover,main .textlink:focus-visible,main .button,main .button:hover,main .button:focus-visible{text-decoration:none}
+main .textlink{transition:color .16s ease}
+main .textlink:hover{color:#bf490d}
+main .button{transition:background-color .16s ease}
+main .button:hover{background-color:#ff843f}
+.cta-row{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem;margin-top:auto;padding-top:1rem}
+.sector-copy,.catalogue-guide>div,.home-resources>div,.home-product,.story-card{display:flex;flex-direction:column}
+.sector-copy{align-self:stretch}
+.sector-copy .cta-row{padding-top:1.15rem}
+.feature-panel .textlink{margin-top:0}
+.catalogue-copy>.textlink,.catalogue-guide>div>.textlink,.home-resources>div>.textlink{align-self:start;margin-top:auto;padding-top:1rem}
+.catalogue-guide>div,.home-resources>div,.home-product,.home-insights,.text-feature{background:var(--panel-grey)}
+.home-resources{gap:1rem}
+.home-resources>div,.home-product,.story-card{padding:clamp(1.1rem,3vw,2rem)}
+.home-insights{width:100%;padding-inline:max(4%,calc((100% - 1260px)/2));margin-block:0}
+.home-insights .story-card{border-top:1px solid #d5d5d5;padding-inline:0}
+.story-grid{gap:clamp(1rem,4vw,3rem)}
+.story-card{border-top:2px solid var(--orange)}
+.insights-action,.product-action{margin-top:1.25rem}
+.feature-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.feature-grid>.sector-panel{grid-column:1/-1}
+.text-feature{display:flex;border-top:2px solid var(--orange)}
+.text-feature .sector-copy{width:100%}
+.contact-aside{align-self:stretch;background:#000}
+.quote-panel .button{margin-top:.55rem}
+@media(max-width:680px){.feature-grid{grid-template-columns:1fr}}
+.home-application,.story-card{display:flex;flex-direction:column}
+.home-application>.home-product,.story-copy{display:flex;flex:1;flex-direction:column}
+.home-application-image,.story-image{width:100%;aspect-ratio:16/8;object-fit:cover}
+.home-insights .story-card{padding-top:0;border:0}
+.home-insights .story-copy{padding-top:1.1rem}
+nav a:hover,.catalogue-copy h3 a:hover{text-decoration:none;color:#bf490d}
+.footer nav a:hover{color:#ff914d}
+.hero-caption{position:absolute;bottom:.7rem;right:4%;margin:0;font-size:.72rem}
+.hero .cta-row{padding-top:0}

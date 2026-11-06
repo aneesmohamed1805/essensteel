@@ -26,12 +26,7 @@ def button(path,label):
 def section(content,style=''):
     return f'<section class="wrap section {style}">{content}</section>'
 
-visual_assets = {
-    'pc': 'catalogue-editorial', 'acsr': 'power', 'spring': 'bedding',
-    'hero': 'catalogue-editorial', 'factory': 'industrial-hall',
-}
 def photo(name,alt='',cls=''):
-    name = visual_assets.get(name, name)
     return f'<img class="{cls}" src="/assets/{name}.webp" alt="{escape(alt,quote=True)}" loading="lazy">'
 
 def page(path,title,description,body):
@@ -55,42 +50,47 @@ def page(path,title,description,body):
 </body></html>''',encoding='utf-8')
 
 interior_visuals = {
-    'about': 'about-editorial', 'technology': 'factory', 'standards': 'hero',
-    'sustainability': 'factory', 'sectors': 'infra', 'insights': 'catalogue-editorial',
-    'insights/pc-strand': 'hero', 'insights/mill-test-report': 'factory',
-    'contact': 'contact-editorial', 'products': 'catalogue-editorial', 'partnership': 'hero', 'downloads': 'hero', 'projects': 'infra',
+    'about': 'about-editorial',
+    'technology': 'technology-editorial',
+    'standards': 'quality-editorial',
+    'sustainability': 'sustainability-editorial',
+    'contact': 'contact-editorial',
+    'products': 'catalogue-editorial',
 }
 
-def visual_style(asset):
-    return f'url(/assets/{visual_assets.get(asset, asset)}.webp)'
-
-def feature(heading, paragraphs, asset, alt, path, label):
+def feature(heading, paragraphs, path, label, asset='', alt=''):
     copy = ''.join(f'<p>{escape(paragraph)}</p>' for paragraph in paragraphs)
-    return f'<section class="sector-panel feature-panel">{photo(asset, alt, "feature-art")}<div class="sector-copy"><h2>{escape(heading)}</h2>{copy}{link(path,label+" →","textlink")}</div></section>'
+    action = f'<div class="cta-row">{link(path,label+" →","textlink")}</div>'
+    visual = photo(asset,alt,'feature-art') if asset else ''
+    style = 'sector-panel feature-panel' if asset else 'feature-panel text-feature'
+    return f'<section class="{style}">{visual}<div class="sector-copy"><h2>{escape(heading)}</h2>{copy}{action}</div></section>'
 
 def feature_group(*features):
-    return '<div class="sector-panels">'+''.join(features)+'</div>'
+    return '<div class="sector-panels feature-grid">'+''.join(features)+'</div>'
 
 def interior(path,title,desc,content):
     visual = interior_visuals.get(path)
-    if path.startswith('products/'):
-        visual = 'catalogue-editorial'
     intro_class = 'intro'
     art = ''
     if visual:
         intro_class += ' intro-visual'
-        art = f'<div class="intro-art" style="background-image:{visual_style(visual)}" aria-hidden="true"></div>'
+        art = f'<div class="intro-art" style="background-image:url(/assets/{visual}.webp)" aria-hidden="true"></div>'
     body_class = '' if path in ('products','contact','insights') or 'sector-panels' in content else 'prose'
     page(path,title,desc,f'<div class="{intro_class}">{art}<div class="wrap"><h1>{escape(title)}</h1><p>{escape(desc)}</p></div></div>{section(content,body_class)}')
 
 def cards():
-    return '<div class="grid">'+''.join(f'<a class="card" href="/products/{key}/"><span>{escape(name)}<br><b aria-hidden="true">→</b></span>{photo(key)}</a>' for name,key,_,_ in products)+'</div>'
+    return '<div class="grid home-product-grid">'+''.join(f'<article class="home-product"><h3>{escape(name)}</h3><p>{escape(uses)}</p><div class="cta-row">{link("/products/"+key+"/","Product details →","textlink")}</div></article>' for name,key,_,uses in products)+'</div>'
 
 def tiles():
-    return '<div class="grid">'+''.join(f'<a class="tile" href="/sectors/#{img}" style="background-image:linear-gradient(0deg,#000d,transparent 90%),url(/assets/{img}.webp)"><span>{name}</span></a>' for name,img,_ in applications)+'</div>'
+    return '<div class="grid home-application-grid">'+''.join(f'<article class="home-application">{photo("home-"+img,"","home-application-image")}<div class="home-product"><h3>{name}</h3><div class="cta-row">{link("/sectors/#"+img,"Explore application →","textlink")}</div></div></article>' for name,img,_ in applications)+'</div>'
 
-def stories_grid():
-    return '<div class="dual">'+''.join(f'<a class="story" href="/insights/{slug}/">{photo(img)}<div><h3>{title}</h3><p>{desc}</p></div></a>' for title,slug,img,desc,_ in stories)+'</div>'
+def stories_grid(with_images=False):
+    cards = []
+    for title,slug,_,desc,_ in stories:
+        asset = 'insight-strand' if slug == 'pc-strand' else 'insight-report'
+        art = photo(asset,'','story-image') if with_images else ''
+        cards.append(f'<article class="story-card">{art}<div class="story-copy"><span class="eyebrow">Technical insight</span><h3>{escape(title)}</h3><p>{escape(desc)}</p><div class="cta-row">{link("/insights/"+slug+"/","Read insight →","textlink")}</div></div></article>')
+    return '<div class="dual story-grid">'+''.join(cards)+'</div>'
 
 def heading(label):
     return f'<h2 class="rule">{label}</h2>'
@@ -98,25 +98,25 @@ def heading(label):
 steps = [('Draw','Reduce wire to the required size.'),('Strand','Form wire into strand where specified.'),('Test','Check against agreed requirements.'),('Prepare','Finish and pack for supply.'),('Supply','Coordinate delivery.')]
 process = '<ol class="steps">'+''.join(f'<li><strong>{name}</strong>{desc}</li>' for name,desc in steps)+'</ol>'
 factory = '<div class="factory"><div class="factory-inner"><div class="wrap"><span class="eyebrow">Green Manufacturing</span><h2>Consistent Quality<br>at Scale</h2><p>Wire drawing, stranding and quality checks support the production of steel wire and strand for a range of applications.</p>'+button('/technology/','Our Manufacturing')+'</div></div></div>'
-hero = '<section class="hero"><img class="outline" src="/assets/outline.png" alt=""><div class="wrap"><h1>Steel Wire. Steel Strand.</h1><p>Made in Abu Dhabi for concrete infrastructure, overhead power networks and industrial production.</p>'+button('/products/','Explore Products')+'<small class="hero-caption">Illustrative infrastructure project</small></div></section>'
-resources = '''<div class="dual"><div><span class="eyebrow">Technical Resources</span><h2 class="normal">Product Data and Documentation</h2><p>Request the specification and documentation for your application.</p><a class="textlink" href="/downloads/">View Technical Resources →</a></div>
+hero = '<section class="hero"><img class="outline" src="/assets/outline.png" alt=""><div class="wrap"><h1>Steel Wire. Steel Strand.</h1><p>Made in Abu Dhabi for concrete infrastructure, overhead power networks and industrial production.</p>'+'<div class="cta-row">'+button('/products/','Explore Products')+'</div></div><small class="hero-caption">Illustrative infrastructure project</small></section>'
+resources = '''<div class="dual home-resources"><div><span class="eyebrow">Technical Resources</span><h2 class="normal">Product Data and Documentation</h2><p>Request the specification and documentation for your application.</p><a class="textlink" href="/downloads/">View Technical Resources →</a></div>
 <div><span class="eyebrow">Partnership</span><h2 class="normal">A Better Supply Partnership</h2><p>Discuss your specification, quantity and delivery requirements with Essen Steel.</p><a class="textlink" href="/partnership/">Work With Us →</a></div></div>'''
-page('', 'Steel Wire & Strand Manufacturer in the UAE','Explore Essen Steel wire and strand products, applications and technical resources. Request a quote from the sales team.',hero+section(heading('Our Process')+process)+factory+section(heading('Our Products')+cards())+section(resources)+section(heading('Applications')+tiles())+section('<div class="row">'+heading('Insights')+link('/insights/','View all insights →','textlink')+'</div>'+stories_grid()))
+page('', 'Steel Wire & Strand Manufacturer in the UAE','Explore Essen Steel wire and strand products, applications and technical resources. Request a quote from the sales team.',hero+section(heading('Our Process')+process)+factory+section(heading('Our Products')+cards())+section(resources)+section(heading('Applications')+tiles())+section(heading('Insights')+stories_grid(with_images=True)+'<div class="cta-row insights-action">'+link('/insights/','View all insights →','textlink')+'</div>','home-insights'))
 product_context = {
-    'pc': ('Concrete infrastructure', 'infra'),
-    'acsr': ('Overhead power transmission', 'power'),
-    'galv': ('Fencing and industrial use', 'galv'),
-    'spring': ('Mattress and bedding production', 'bedding'),
-    'duct': ('Duct and cable installation', 'duct'),
-    'special': ('Downstream wire processing', 'special'),
+    'pc': 'Concrete infrastructure',
+    'acsr': 'Overhead power transmission',
+    'galv': 'Fencing and industrial use',
+    'spring': 'Mattress and bedding production',
+    'duct': 'Duct and cable installation',
+    'special': 'Downstream wire processing',
 }
 catalogue_cards = []
 for name,key,description,_ in products:
-    application,asset = product_context[key]
+    application = product_context[key]
     catalogue_cards.append(f"""
     <article class="catalogue-card">
       <a class="catalogue-visual" href="/products/{key}/" aria-label="{escape(name,quote=True)}">
-        {photo(asset, '', 'catalogue-image')}
+        {photo('catalogue-'+key, '', 'catalogue-image')}
         <span class="catalogue-index">{escape(application)}</span>
       </a>
       <div class="catalogue-copy">
@@ -151,9 +151,12 @@ application_examples = {
 }
 for name,key,desc,uses in products:
     query = {'pc':'infra','acsr':'power','spring':'bedding'}.get(key,'other')
-    interior(f'products/{key}',name,desc,feature_group(feature('Where it is used', [desc, application_examples[key]], product_context[key][1], 'Illustrative '+uses.lower()+' application', '/sectors/#'+query, 'View applications'), feature('What to specify', [product_notes[key], 'Include your quantity, delivery destination and target date when requesting a quote. Identify any certificate, inspection requirement or material test report that forms part of the order.'], key, 'Illustrative material or application detail', '/downloads/', 'Request product documentation'))+button('/contact/','Request a Quote')+' <p>'+link('/downloads/','Request product documentation','textlink')+'</p>')
+    interior(f'products/{key}',name,desc,feature_group(
+        feature('Where it is used', [desc, application_examples[key]], '/sectors/#'+query, 'View applications'),
+        feature('What to specify', [product_notes[key], 'Include your quantity, delivery destination and target date when requesting a quote. Identify any certificate, inspection requirement or material test report that forms part of the order.'], '/downloads/', 'Request product documentation'),
+    )+'<div class="cta-row product-action">'+button('/contact/#quote','Request a Quote')+'</div>')
 sector_details = [
-    ('infra','Infrastructure','infra','In a concrete viaduct, prestressing strand helps the girders carry loads between piers. Tension in the strand puts the concrete into compression. The structural design governs the strand designation, dimensions and test requirements.','pc','PC Strand'),
+    ('infra','Infrastructure','sector-infrastructure','In a concrete viaduct, prestressing strand helps the girders carry loads between piers. Tension in the strand puts the concrete into compression. The structural design governs the strand designation, dimensions and test requirements.','pc','PC Strand'),
     ('construction','Construction','construction','Precast beams and floor units can be prestressed before they leave the casting yard. In pre-tensioned production, strand is tensioned in the casting bed and transfers that force to the concrete after it has gained sufficient strength.','pc','PC Strand'),
     ('power','Power Transmission','power','An overhead line conductor has to span the distance between towers while carrying electrical current. In ACSR construction, the aluminium wires carry the current and the steel core provides reinforcement. Essen supplies the steel core wire or strand.','acsr','ACSR Steel Core Wire and Strand'),
     ('telecommunications','Telecommunications','duct','A telecom duct route and the cable installed within it are separate parts of the system. Duct wire is used in cable installation, while armouring wire may form part of the cable itself. Identify which application your specification covers.','duct','Duct Wire'),
@@ -172,7 +175,7 @@ sector_context = {
     'bedding': 'Include the spring design requirements and how the wire feeds into your forming equipment. Confirm the pack format and the properties your production team needs to check.',
 }
 sector_image_descriptions = {
-    'infra': 'Illustrative concrete viaduct crossing a rocky valley',
+    'infra': 'Illustrative railway viaduct under construction',
     'construction': 'Illustrative precast concrete beams stored in a casting yard',
     'power': 'Illustrative overhead transmission towers and suspended conductors',
     'telecommunications': 'Illustrative telecom conduits and cable installation site',
@@ -183,7 +186,7 @@ sector_image_descriptions = {
 sector_panels = []
 for key,title,asset,body,product,label in sector_details:
     art = photo(asset, sector_image_descriptions[key], "sector-art")
-    copy = f'<div class="sector-copy"><h2>{title}</h2><p>{body}</p><p>{sector_context[key]}</p>{link("/products/"+product+"/",label+" →","textlink")}</div>'
+    copy = f'<div class="sector-copy"><h2>{title}</h2><p>{body}</p><p>{sector_context[key]}</p><div class="cta-row">{link("/products/"+product+"/",label+" →","textlink")}</div></div>'
     sector_panels.append(f'<section class="sector-panel" id="{key}">{art}{copy}</section>')
 app_content = sector_nav+'<div class="sector-panels">'+''.join(sector_panels)+'</div>'
 interior('sectors','Industries and Applications','Explore how Essen Steel wire and strand are used across infrastructure, construction, power, telecommunications, agriculture, fencing and manufacturing.',app_content)
@@ -191,65 +194,65 @@ interior('technology','Manufacturing and Technology','From drawn wire to finishe
     feature('Drawing and stranding', [
         'Drawing reduces steel wire to the diameter required for its next operation. For a strand, individual wires are formed into the required construction. Prestressing strand and ACSR steel core strand serve different applications and need their own order specifications.',
         'Start with the product designation and governing standard. Those details help establish which dimensions, mechanical properties and construction need to be checked.'
-    ], 'industrial-hall','Illustrative wire-drawing line','/products/','Explore the product range'),
+    ],'/products/','Explore the product range'),
     feature('A zinc coating for exposed wire', [
         'The zinc coating on galvanised wire helps protect the steel surface in applications such as outdoor fencing. The order must describe the coating as well as the wire beneath it. Mesh forming and cable armouring can call for different combinations of dimensions, coating and mechanical properties.',
         'If the wire runs through forming or feeding equipment, tell us how it is handled and what coil or pack arrangement that equipment accepts.'
-    ],'galv','Illustrative galvanised steel wire','/products/galv/','Explore galvanised wire'),
+    ],'/products/galv/','Explore galvanised wire'),
     feature('Inspection, packing and dispatch', [
         'A labelled coil and its inspection record give the receiving team two points to match before material enters production. Agree the identifiers, report format and checks required for the order before packing and dispatch.',
         'Confirm the pack configuration, quantity, destination and delivery window before ordering. Let us know about unloading restrictions or staging requirements.'
-    ],'mill','Illustrative coil tag and inspection worksheet','/standards/','Review quality and documentation')
+    ],'/standards/','Review quality and documentation')
 ))
 interior('standards','Quality and Certifications','What engineers and procurement teams should agree before ordering and check when receiving material.',feature_group(
     feature('Agree the acceptance criteria', [
         'Coiled wire and finished strand can look similar at a glance while serving very different functions. The purchase specification identifies the product, grade and dimensions and sets the acceptance criteria for that material.',
         'Depending on the product, the specification may call for tensile or elongation results, dimensional tolerances or coating checks. Ask which results will appear on the order documentation.'
-    ],'pc','Illustrative steel strand detail','/downloads/','Request technical documentation'),
+    ],'/downloads/','Request technical documentation'),
     feature('Match the coil tag to the test report', [
         'Start with the identifier on the coil tag. Match it to the batch or coil reference on the mill test report, then compare the documented grade, dimensions and test results with the purchase specification.',
         'If the identifiers or values differ, raise the discrepancy with the supplier before releasing the material for use.'
-    ],'mill','Illustrative coil tag and inspection worksheet','/insights/mill-test-report/','Read the mill test report guide'),
+    ],'/insights/mill-test-report/','Read the mill test report guide','mill','Illustrative coil tag and inspection worksheet'),
     feature('Check certificates for scope', [
         'A management-system certificate covers a defined system and facility. A product certificate covers specified products, and an authority approval has its own scope. Ask for the document applicable to your product, facility and project.',
         'Review the issuing body, covered scope and validity against your tender or procurement requirements.'
-    ],'factory','Illustrative manufacturing equipment','/contact/','Request the applicable documents')
+    ],'/contact/','Request the applicable documents')
 ))
 interior('sustainability','Responsible Manufacturing','What to ask about resource use, material selection and evidence for your procurement process.',feature_group(
     feature('Define what you need to measure', [
         'Energy use and material waste are relevant to wire and strand manufacturing. If your supplier assessment asks for these figures, identify the product or facility, the reporting period and the boundary you need covered.',
         'Specify whether you need a facility-level figure or product-level documentation. The two answer different questions and should be compared on a consistent basis.'
-    ],'factory','Illustrative production line','/contact/','Request manufacturing information'),
+    ],'/contact/','Request manufacturing information'),
     feature('Specify for the intended service', [
         'Material choice starts with the application and its service conditions. For wire used outdoors or in other exposure conditions, share the governing standard, required coating and intended use with the technical team.',
         'For tenders, include the documentation format and any reporting or verification requirements with the enquiry.'
-    ],'galv','Illustrative zinc-coated wire','/products/galv/','Explore galvanised wire')
+    ],'/products/galv/','Explore galvanised wire')
 ))
 interior('about','About Essen Steel','A UAE manufacturer of steel wire and strand, based in Kizad, Abu Dhabi.',feature_group(
     feature('Wire and strand from Abu Dhabi', [
         'Essen Steel manufactures steel wire and strand for buyers who need to match a material to a specific design, process or installation. Its range includes prestressed concrete strand, ACSR steel core wire and strand, galvanised wire, mattress spring wire, duct wire and specialist wires.',
         'The range serves different purchasing needs. A civil contractor may buy prestressing strand to a structural specification, while a conductor or spring manufacturer needs wire that meets the requirements of a downstream production process.'
-    ],'industrial-hall','Illustrative wire production hall','/products/','Explore Essen Steel products'),
+    ],'/products/','Explore Essen Steel products'),
     feature('From strand to concrete span', [
         'Prestressing strand is used in concrete bridges, rail infrastructure and buildings. Steel core wire and strand reinforce ACSR conductors. Other wires serve fencing, agricultural, bedding, cable and industrial applications.',
         'In a viaduct, prestressing strand introduces compression into the concrete girders that span between piers. The design sets the strand specification. Essen’s other wire families serve different roles, from reinforcement within overhead conductors to wire formed into mattress springs.'
-    ],'infra','Illustrative bridge infrastructure','/sectors/','Explore industries and applications'),
+    ],'/sectors/','Explore industries and applications'),
     feature('Match the wire to the work', [
         'Essen works with engineers, procurement teams and manufacturers to clarify order requirements. A useful enquiry covers the applicable standard, grade, dimensions, quantity, packaging and test documentation.',
         'For UAE or international enquiries, include the destination and required delivery date so the sales team can review the supply arrangements.'
-    ],'hero','Illustrative steel strand close-up','/partnership/','Discuss a supply requirement')
+    ],'/partnership/','Discuss a supply requirement')
 ))
 interior('partnership','Partnership and Supply','From the first specification discussion to delivery planning.',feature_group(
-    feature('Send a complete enquiry', ['Start with the application and product designation. Add the standard, grade, dimensions, quantity and any requirements for testing, coating or documentation. If the specification is still being developed, share the operating conditions and decision timeline.'], 'hero','Illustrative steel strand','/products/','Find the product'),
-    feature('Plan for receipt and handling', ['Tell us the delivery destination, required date and packaging format. Include unloading, storage or production-line constraints so those requirements can be considered before the order is confirmed.'], 'factory','Illustrative industrial reel handling','/contact/','Request a Quote')
+    feature('Send a complete enquiry', ['Start with the application and product designation. Add the standard, grade, dimensions, quantity and any requirements for testing, coating or documentation. If the specification is still being developed, share the operating conditions and decision timeline.'],'/products/','Find the product'),
+    feature('Plan for receipt and handling', ['Tell us the delivery destination, required date and packaging format. Include unloading, storage or production-line constraints so those requirements can be considered before the order is confirmed.'],'/contact/','Request a Quote')
 ))
 interior('downloads','Technical Resources','Request product data sheets and quality documentation.',feature_group(
-    feature('Product data sheets', ['Share the product family and applicable standard or grade so the sales team can identify the relevant document. If comparing materials, use the same units and confirm that each data sheet covers the construction and dimensions you intend to order.'], 'pc','Illustrative steel strand detail','/products/','Browse the catalogue'),
-    feature('Test reports and certificates', ['Specify which reports or certificates your purchase order or tender requires. Include the required test results, issuing body or approval scope where applicable.'], 'mill','Illustrative coil tag and inspection worksheet','mailto:sales@essensteel.com?subject=Product%20documentation%20request','Request documentation')
+    feature('Product data sheets', ['Share the product family and applicable standard or grade so the sales team can identify the relevant document. If comparing materials, use the same units and confirm that each data sheet covers the construction and dimensions you intend to order.'],'/products/','Browse the catalogue'),
+    feature('Test reports and certificates', ['Specify which reports or certificates your purchase order or tender requires. Include the required test results, issuing body or approval scope where applicable.'],'mailto:sales@essensteel.com?subject=Product%20documentation%20request','Request documentation')
 ))
 interior('projects','Project Enquiries','Discuss wire and strand requirements for your project.',feature_group(
-    feature('Start with the design requirement', ['Tell us what you are building, which product the design specifies and what standard applies. Include the project location, procurement stage, quantities and delivery timetable.'], 'infra','Illustrative infrastructure application','/sectors/','Browse applications'),
-    feature('Prepare the procurement package', ['Share inspection or documentation requirements early, especially where a consultant or authority must review the material. Include packaging or handling constraints for staged deliveries.'], 'hero','Illustrative steel strand','/contact/','Discuss your project')
+    feature('Start with the design requirement', ['Tell us what you are building, which product the design specifies and what standard applies. Include the project location, procurement stage, quantities and delivery timetable.'],'/sectors/','Browse applications'),
+    feature('Prepare the procurement package', ['Share inspection or documentation requirements early, especially where a consultant or authority must review the material. Include packaging or handling constraints for staged deliveries.'],'/contact/','Discuss your project')
 ))
 quote_products = ''.join(f'<option>{escape(name)}</option>' for name, *_ in products)
 contact_content = f"""
@@ -266,13 +269,13 @@ contact_content = f"""
         <label>Product<select name="Product"><option value="">Select a product</option>{quote_products}<option>Help me choose</option></select></label>
       </div>
       <label>Project or order details<textarea name="Project or order details" rows="5" placeholder="Application, grade or standard, quantity, destination and required date" required></textarea></label>
-      <button class="button" type="submit">Open email draft →</button>
       <p class="form-note">This opens a draft in your email app. Review it, attach any specifications and send it to Essen Steel.</p>
+      <div class="cta-row"><button class="button" type="submit">Open email draft →</button></div>
     </form>
     <noscript><p>Send your enquiry to <a href="mailto:sales@essensteel.com">sales@essensteel.com</a>.</p></noscript>
   </section>
   <aside class="contact-aside">
-    {photo('industrial-hall','Illustrative steel wire production hall','contact-photo')}
+    
     <div class="contact-details">
       <h2>Talk to Essen Steel</h2>
       <p><a href="mailto:sales@essensteel.com">sales@essensteel.com</a><br><a href="tel:+97125109000">+971 2 510 9000</a></p>
@@ -290,7 +293,7 @@ contact_content = f"""
 interior('contact','Contact Essen Steel','Speak to the sales team about a quote, product specification or delivery requirement.',contact_content)
 interior('insights','Insights','Practical guides to steel strand and technical documentation.',stories_grid())
 for title,slug,img,desc,body in stories:
-    interior('insights/'+slug,title,desc,photo(img,'Illustrative detail','detail-photo')+f'<p>{body}</p>'+button('/downloads/','Technical Resources'))
+    interior('insights/'+slug,title,desc,f'<p>{body}</p><div class="cta-row">'+button('/downloads/','Technical Resources')+'</div>')
 interior('privacy-policy','Privacy','Information for visitors to this review build.','<p>Quote and documentation links open your email app. If you choose to send an email, Essen Steel receives the information you include in it.</p>')
 interior('cookies','Cookies','Information for visitors to this review build.','<p>This preview uses no first-party cookies or analytics scripts. Its stylesheet requests the Exo typeface from Google Fonts.</p>')
 interior('404.html','Page unavailable','The address may have changed.',button('/','Return to Home'))
