@@ -99,3 +99,14 @@ img.sector-art{width:100%;height:100%;object-fit:cover}
   margin-top: auto;
   padding-top: 0.9rem;
 }
+
+/* The homepage Insights panel follows the main content width. */
+main > .section:has(> .row > a[href="/insights/"]) {
+  background: #f3f3f3;
+  padding-inline: clamp(1rem, 3vw, 2.5rem);
+  margin-bottom: clamp(2rem, 5vw, 4.5rem);
+}
+
+main > .section:has(> .row > a[href="/insights/"]) .rule::after {
+  display: none;
+}
