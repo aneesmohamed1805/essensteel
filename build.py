@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 
 root = Path(__file__).parent / 'public'
-nav = [('About','about'),('Products','products'),('Applications','sectors'),('Manufacturing','technology'),('Quality','standards'),('Insights','insights'),('Technical Resources','downloads'),('Contact','contact')]
+nav = [('Products','products'),('Applications','sectors'),('Manufacturing','technology'),('Quality','standards'),('Insights','insights'),('Contact','contact')]
 products = [
  ('PC Strand','pc','Prestressing strand for concrete structures such as bridges, rail infrastructure and buildings.','Infrastructure'),
  ('ACSR Steel Core Wire & Strand','acsr','Steel core wire and strand for aluminium conductor steel reinforced (ACSR) used in overhead power transmission. Essen supplies the steel core component.','Power Transmission'),
@@ -60,6 +60,17 @@ def place_images(path, body):
 def page(path,title,description,body):
     body = place_images(path, body)
     links = ''.join(link('/'+slug+'/',name) for name,slug in nav)
+    about_menu = '''<div class="about-nav">
+      <a href="/about/">About</a>
+      <details class="about-subnav">
+        <summary aria-label="About submenu"><span aria-hidden="true"></span></summary>
+        <ul>
+          <li><a href="/downloads/">Technical Resources</a></li>
+          <li><a href="/partnership/">Partnership &amp; Supply</a></li>
+        </ul>
+      </details>
+    </div>'''
+    footer_links = link('/about/','About') + links
     logo = '<a href="/" aria-label="Essen Steel home"><img class="logo" src="/assets/logo.webp" alt="Essen Steel" width="1511" height="778"></a>'
     target = root / path / 'index.html' if path != '404.html' else root / path
     target.parent.mkdir(parents=True,exist_ok=True)
@@ -71,9 +82,9 @@ def page(path,title,description,body):
 <meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="/assets/site.css"></head>
 <body><a class="skip" href="#main">Skip to content</a>
-<header class="wrap bar">{logo}<nav aria-label="Main">{links}</nav></header>
+<header class="wrap bar">{logo}<nav aria-label="Main">{about_menu}{links}</nav></header>
 <main id="main">{body}</main>
-<footer class="footer"><div class="wrap"><div class="bar">{logo}<nav aria-label="Footer">{links}</nav></div>
+<footer class="footer"><div class="wrap"><div class="bar">{logo}<nav aria-label="Footer">{footer_links}</nav></div>
 <div class="row"><span>© 2026 Essen Steel</span><nav aria-label="Company">
 {link('/projects/','Projects')}{link('/privacy-policy/','Privacy')}{link('/cookies/','Cookies')}</nav></div></div></footer>
 </body></html>''',encoding='utf-8')
