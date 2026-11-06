@@ -49,31 +49,32 @@ def page(path,title,description,body):
 {link('/about/','About')}{link('/projects/','Projects')}{link('/privacy-policy/','Privacy')}{link('/cookies/','Cookies')}</nav></div></div></footer>
 </body></html>''',encoding='utf-8')
 
-pantheon_media = 'https://dev-essen-steel-2.pantheonsite.io/wp-content/uploads/2026/03/'
 interior_visuals = {
-    'about': ('factory', ''),
-    'technology': ('factory', 'essen-manufacturing.webp'),
-    'standards': ('mill', ''),
-    'sustainability': ('factory', ''),
-    'sectors': ('infra', 'essen-products-banner.webp'),
+    'about': 'factory', 'technology': 'factory', 'standards': 'hero',
+    'sustainability': 'factory', 'sectors': 'infra',
+    'partnership': 'hero', 'downloads': 'hero', 'projects': 'infra',
 }
 
-def visual_style(fallback, source=''):
-    layers = [f'url(/assets/{fallback}.webp)']
-    if source:
-        layers.insert(0, f'url({pantheon_media}{source})')
-    return ','.join(layers)
+def visual_style(asset):
+    return f'url(/assets/{asset}.webp)'
+
+def feature(heading, paragraphs, asset, alt, path, label):
+    copy = ''.join(f'<p>{escape(paragraph)}</p>' for paragraph in paragraphs)
+    return f'<section class="sector-panel feature-panel">{photo(asset, alt, "feature-art")}<div class="sector-copy"><h2>{escape(heading)}</h2>{copy}{link(path,label+" →","textlink")}</div></section>'
+
+def feature_group(*features):
+    return '<div class="sector-panels">'+''.join(features)+'</div>'
 
 def interior(path,title,desc,content):
     visual = interior_visuals.get(path)
     if path.startswith('products/'):
-        visual = (path.split('/')[1], '')
+        visual = 'hero'
     intro_class = 'intro'
     art = ''
     if visual:
         intro_class += ' intro-visual'
-        art = f'<div class="intro-art" style="background-image:{visual_style(*visual)}" aria-hidden="true"></div>'
-    body_class = '' if path == 'sectors' else 'prose'
+        art = f'<div class="intro-art" style="background-image:{visual_style(visual)}" aria-hidden="true"></div>'
+    body_class = '' if 'sector-panels' in content else 'prose'
     page(path,title,desc,f'<div class="{intro_class}">{art}<div class="wrap"><h1>{escape(title)}</h1><p>{escape(desc)}</p></div></div>{section(content,body_class)}')
 
 def cards():
@@ -115,50 +116,97 @@ product_notes = {
 }
 for name,key,desc,uses in products:
     query = {'pc':'infra','acsr':'power','spring':'bedding'}.get(key,'other')
-    interior(f'products/{key}',name,desc,f'<h2>Applications</h2><p>{uses}</p>'+link('/sectors/#'+query,'View applications','textlink')+f'<h2>Discuss your specification</h2><p>{product_notes[key]}</p><p>Include your quantity, delivery destination and target date when requesting a quote.</p>'+button('/contact/','Request a Quote')+' <p>'+link('/downloads/','Request product documentation','textlink')+'</p>')
+    interior(f'products/{key}',name,desc,feature_group(feature('Where it is used', [desc, 'Application: '+uses+'.'], {'pc':'infra','acsr':'power','spring':'bedding'}.get(key,key), 'Illustrative application detail', '/sectors/#'+query, 'View applications'), feature('What to specify', [product_notes[key], 'Include your quantity, delivery destination and target date when requesting a quote. Identify any certificate, inspection requirement or material test report that forms part of the order.'], key, 'Illustrative wire or strand detail', '/downloads/', 'Request product documentation'))+button('/contact/','Request a Quote')+' <p>'+link('/downloads/','Request product documentation','textlink')+'</p>')
 sector_details = [
-    ('infra','Infrastructure','infra','essen-infrastructure.webp','Prestressing strand is used in concrete bridges, rail infrastructure and other civil works. Share the governing standard, strand designation and test documentation required by the structural design.','pc','PC Strand'),
-    ('construction','Construction','infra','essen-construction-b.webp','Prestressed concrete elements are used in buildings and other structures. Confirm the specified strand, nominal diameter, packaging and handling requirements with the project team.','pc','PC Strand'),
-    ('power','Power Transmission','power','','Steel core wire and strand reinforce the aluminium wires in ACSR overhead conductors. Include the conductor designation and the steel core construction in your enquiry.','acsr','ACSR Steel Core Wire and Strand'),
-    ('telecommunications','Telecommunications','duct','essen-telecommunication.webp','Duct wire is used in cable installation. Steel wire may also be specified for cable armouring. Share how the wire will be used, along with dimensions, coating requirements and the governing specification.','duct','Duct Wire'),
-    ('other','Agriculture and Fencing','galv','essen-fencing.webp','Galvanised steel wire is used for agricultural and fencing applications. Include the wire diameter, coating requirements and intended installation or downstream process.','galv','Galvanised Steel Wire'),
-    ('manufacturing','Manufacturing','factory','essen-manufacturing.webp','Industrial buyers use steel wire for applications such as nail manufacture, cable armouring and other downstream processing. Share the forming process and the mechanical and packaging requirements.','special','Specialist Wires'),
-    ('bedding','Bedding','bedding','','Mattress manufacturers form spring wire into components for bedding assemblies. Tell us the wire diameter, required mechanical properties and pack format for your forming equipment.','spring','Mattress Spring Wire'),
+    ('infra','Infrastructure','infra','Prestressing strand is used in concrete bridges, rail infrastructure and other civil works. Share the governing standard, strand designation and test documentation required by the structural design.','pc','PC Strand'),
+    ('construction','Construction','infra','Prestressed concrete elements are used in buildings and other structures. Confirm the specified strand, nominal diameter, packaging and handling requirements with the project team.','pc','PC Strand'),
+    ('power','Power Transmission','power','Steel core wire and strand reinforce the aluminium wires in ACSR overhead conductors. Include the conductor designation and the steel core construction in your enquiry.','acsr','ACSR Steel Core Wire and Strand'),
+    ('telecommunications','Telecommunications','duct','Duct wire is used in cable installation. Steel wire may also be specified for cable armouring. Share how the wire will be used, along with dimensions, coating requirements and the governing specification.','duct','Duct Wire'),
+    ('other','Agriculture and Fencing','galv','Galvanised steel wire is used for agricultural and fencing applications. Include the wire diameter, coating requirements and intended installation or downstream process.','galv','Galvanised Steel Wire'),
+    ('manufacturing','Manufacturing','factory','Industrial buyers use steel wire for applications such as nail manufacture, cable armouring and other downstream processing. Share the forming process and the mechanical and packaging requirements.','special','Specialist Wires'),
+    ('bedding','Bedding','bedding','Mattress manufacturers form spring wire into components for bedding assemblies. Tell us the wire diameter, required mechanical properties and pack format for your forming equipment.','spring','Mattress Spring Wire'),
 ]
 sector_nav = '<nav class="sector-nav" aria-label="Jump to sector">'+''.join(link('#'+key,title) for key,title,*_ in sector_details)+'</nav>'
+sector_context = {
+    'infra': 'For staged civil works, include the quantity and delivery window for each stage. Identify any inspection and material traceability requirements before placing the order.',
+    'construction': 'For precast or prestressing work, establish the specification with the design and installation teams. Tell us about any restrictions on pack dimensions, handling or storage at the plant or site.',
+    'power': 'Conductor manufacturers should identify the required core wire diameter, coating and mechanical properties. Where the specification calls for a stranded core, include the construction and applicable test documentation.',
+    'telecommunications': 'Identify whether the wire is for a duct installation or an armouring process. The intended function determines the specification and which wire family to discuss.',
+    'other': 'For fence manufacture or agricultural installations, explain the exposure conditions and downstream process. This helps establish which coating, wire properties and pack format the order requires.',
+    'manufacturing': 'Share how the wire is fed, formed or cut, and which dimensions and mechanical properties affect your process. Note any limits on coil size or pack weight.',
+    'bedding': 'Include the spring design requirements and how the wire feeds into your forming equipment. Confirm the pack format and the properties your production team needs to check.',
+}
 sector_panels = []
-for key,title,fallback,source,body,product,label in sector_details:
-    art = f'<div class="sector-art" style="background-image:{visual_style(fallback,source)}" aria-hidden="true"></div>'
-    copy = f'<div class="sector-copy"><h2>{title}</h2><p>{body}</p>{link("/products/"+product+"/",label+" →","textlink")}</div>'
+for key,title,asset,body,product,label in sector_details:
+    art = f'<div class="sector-art" style="background-image:{visual_style(asset)}" aria-hidden="true"></div>'
+    copy = f'<div class="sector-copy"><h2>{title}</h2><p>{body}</p><p>{sector_context[key]}</p>{link("/products/"+product+"/",label+" →","textlink")}</div>'
     sector_panels.append(f'<section class="sector-panel" id="{key}">{art}{copy}</section>')
 app_content = sector_nav+'<div class="sector-panels">'+''.join(sector_panels)+'</div>'
 interior('sectors','Industries and Applications','Explore how Essen Steel wire and strand are used across infrastructure, construction, power, telecommunications, agriculture, fencing and manufacturing.',app_content)
-interior('technology','Manufacturing and Technology','Steel wire and strand production in Kizad, Abu Dhabi.',"""
-<section><h2>Wire drawing and stranding</h2><p>Wire drawing reduces the material to the diameter required for the order. Where the product is a strand, individual wires are formed into the specified construction. The required dimensions and mechanical properties depend on the product and its application.</p></section>
-<section><h2>Finishing and galvanising</h2><p>Finishing depends on the intended use. For galvanised products, the coating specification forms part of the order alongside the wire dimensions and mechanical requirements.</p></section>
-<section><h2>Testing and traceability</h2><p>Inspection and testing connect the manufacturing process to the buyer’s specification. Agree the relevant dimensional, mechanical and coating checks, along with any test reports and material identification required for delivery.</p></section>
-<section><h2>Packaging and supply</h2><p>Share how the material will be handled and processed at the destination. Agree the packaging, labelling, quantity and delivery requirements as part of the order.</p></section>
-"""+link('/sustainability/','Responsible manufacturing','textlink')+'<p>'+link('/standards/','Quality and documentation','textlink')+'</p>')
-interior('standards','Quality and Certifications','Discuss product requirements, inspection and documentation.',"""
-<section><h2>Quality assurance through production</h2><p>Quality assurance covers incoming material inspection, checks during production and final verification against the specification. Agree any project-specific inspection or acceptance requirements when requesting a quote.</p></section>
-<section><h2>Mechanical, dimensional and coating checks</h2><p>Relevant checks may include tensile strength, elongation and dimensions. For galvanised products, specify the coating requirement and the test method or reporting format your project needs.</p></section>
-<section><h2>Material traceability</h2><p>When mill test reports are required, agree the batch or coil identification and the information to appear in the report. Match the material identification and report to the purchase specification at receipt.</p></section>
-<section><h2>Certification and approval documents</h2><p>Ask for the current certificate and scope for the product or facility involved. Identify whether the project requires management-system certification, product certification or an authority approval.</p></section>
-""".replace('Quality assurance covers','Quality assurance covers')+button('/downloads/','Technical Resources'))
-interior('sustainability','Responsible Manufacturing','Manufacturing practices and environmental information for procurement teams.',"""
-<section><h2>Energy and resource use</h2><p>Energy use, material waste and process control are focus areas for responsible wire and strand manufacturing. Buyers who track these factors can specify the product, reporting boundary and period they need when requesting evidence.</p></section>
-<section><h2>Material selection and service conditions</h2><p>The right grade, dimensions and coating depend on the application. Share the operating conditions and applicable standard so the material specification can be reviewed for the intended use.</p></section>
-<section><h2>Environmental documentation</h2><p>For supplier assessments or tenders, include the exact environmental or energy documentation required and any applicable reporting format.</p></section>
-"""+button('/contact/','Request Manufacturing Information'))
-interior('about','About Essen Steel','Steel wire and strand manufacturer in Abu Dhabi, United Arab Emirates.',"""
-<section><h2>What Essen manufactures</h2><p>From its facility in Kizad, Abu Dhabi, Essen Steel manufactures steel wire and strand for infrastructure, power transmission, construction and industrial manufacturing. The range includes prestressed concrete strand, ACSR steel core wire and strand, galvanised wire and specialist wires.</p></section>
-<section><h2>What the products support</h2><p>Prestressing strand is used in concrete structures such as bridges, rail infrastructure and buildings. Steel core wire and strand are used in ACSR conductors, while other wire products serve bedding, fencing, agriculture and cable applications.</p></section>
-<section><h2>How Essen works with buyers</h2><p>Essen works with engineers, procurement teams and manufacturers to clarify material requirements before supply. The discussion can cover the applicable standard, product grade, quantity, test documentation, packaging and delivery destination.</p></section>
-<section><h2>Supply from the UAE</h2><p>For UAE or international enquiries, provide the delivery location and required timeframe so the sales team can review the order and discuss available arrangements.</p></section>
-"""+button('/products/','Explore Products'))
-interior('partnership','Partnership and Supply','Discuss your specification and delivery requirements with Essen Steel.','<p>Include the intended application, product specification, quantity, packaging needs, destination and required delivery date in your enquiry.</p>'+button('/contact/','Request a Quote'))
-interior('downloads','Technical Resources','Request product data sheets and quality documentation.','<p>Tell us the wire or strand you need and the standard or grade your order specifies. The sales team can confirm the applicable data sheet and documents for your enquiry.</p>'+button('mailto:sales@essensteel.com?subject=Product%20documentation%20request','Request Documentation'))
-interior('projects','Project Enquiries','Discuss wire and strand requirements for your project.','<p>Tell the sales team what you are building, the product and standard you require, and your delivery timetable.</p>'+button('/contact/','Discuss Your Project'))
+interior('technology','Manufacturing and Technology','From drawn wire to finished strand, see how the specification carries through production and supply.',feature_group(
+    feature('Drawing and stranding', [
+        'Drawing reduces steel wire to the diameter required for its next operation. For a strand, individual wires are formed into the required construction. Prestressing strand and ACSR steel core strand serve different applications and need their own order specifications.',
+        'Start with the product designation and governing standard. Those details help establish which dimensions, mechanical properties and construction need to be checked.'
+    ], 'factory','Illustrative wire-drawing line','/products/','Explore the product range'),
+    feature('Finishing and coating', [
+        'The intended application determines how wire is finished. Where zinc coating is specified, state the required coating alongside wire diameter and mechanical properties. Fencing, cable armouring and downstream forming may call for different requirements.',
+        'If the wire runs through forming or feeding equipment, tell us how it is handled and what coil or pack arrangement that equipment accepts.'
+    ],'galv','Illustrative galvanised steel wire','/products/galv/','Explore galvanised wire'),
+    feature('Inspection, packing and dispatch', [
+        'The order specification guides the checks and documentation required for delivery. Agree the report format and material identification so the receiving team can match the documents to the shipment.',
+        'Confirm the pack configuration, quantity, destination and delivery window before ordering. Let us know about unloading restrictions or staging requirements.'
+    ],'mill','Illustrative mill test report','/standards/','Review quality and documentation')
+))
+interior('standards','Quality and Certifications','What engineers and procurement teams should agree before ordering and check when receiving material.',feature_group(
+    feature('Agree the acceptance criteria', [
+        'Quality checks start with the purchase specification. Identify the product designation, grade, dimensions and governing standard, then agree the test methods and acceptance criteria for the order.',
+        'Depending on the product, the specification may call for tensile or elongation results, dimensional tolerances or coating checks. Ask which results will appear on the order documentation.'
+    ],'pc','Illustrative steel strand detail','/downloads/','Request technical documentation'),
+    feature('Trace material to its test report', [
+        'A mill test report helps the receiving team compare the delivered material with the purchase specification. Match the batch or coil identifier to the shipment, then check that the report covers the grade, dimensions and results required by the order.',
+        'If the identifiers or values differ, raise the discrepancy with the supplier before releasing the material for use.'
+    ],'mill','Illustrative mill test report','/insights/mill-test-report/','Read the mill test report guide'),
+    feature('Check certificates for scope', [
+        'A management-system certificate covers a defined system and facility. A product certificate covers specified products, and an authority approval has its own scope. Ask for the document applicable to your product, facility and project.',
+        'Review the issuing body, covered scope and validity against your tender or procurement requirements.'
+    ],'factory','Illustrative manufacturing equipment','/contact/','Request the applicable documents')
+))
+interior('sustainability','Responsible Manufacturing','What to ask about resource use, material selection and evidence for your procurement process.',feature_group(
+    feature('Define what you need to measure', [
+        'Energy use and material waste are relevant to wire and strand manufacturing. If your supplier assessment asks for these figures, identify the product or facility, the reporting period and the boundary you need covered.',
+        'Specify whether you need a facility-level figure or product-level documentation. The two answer different questions and should be compared on a consistent basis.'
+    ],'factory','Illustrative production line','/contact/','Request manufacturing information'),
+    feature('Specify for the intended service', [
+        'Material choice starts with the application and its service conditions. For wire used outdoors or in other exposure conditions, share the governing standard, required coating and intended use with the technical team.',
+        'For tenders, include the documentation format and any reporting or verification requirements with the enquiry.'
+    ],'galv','Illustrative zinc-coated wire','/products/galv/','Explore galvanised wire')
+))
+interior('about','About Essen Steel','A UAE manufacturer of steel wire and strand, based in Kizad, Abu Dhabi.',feature_group(
+    feature('Wire and strand from Abu Dhabi', [
+        'Essen Steel manufactures steel wire and strand for buyers who need to match a material to a specific design, process or installation. Its range includes prestressed concrete strand, ACSR steel core wire and strand, galvanised wire, mattress spring wire, duct wire and specialist wires.',
+        'The range serves different purchasing needs. A civil contractor may buy prestressing strand to a structural specification, while a conductor or spring manufacturer needs wire that meets the requirements of a downstream production process.'
+    ],'factory','Illustrative wire production hall','/products/','Explore Essen Steel products'),
+    feature('Where the material goes', [
+        'Prestressing strand is used in concrete bridges, rail infrastructure and buildings. Steel core wire and strand reinforce ACSR conductors. Other wires serve fencing, agricultural, bedding, cable and industrial applications.',
+        'Start with the application to see what Essen supplies and which details to bring to a technical discussion.'
+    ],'infra','Illustrative bridge infrastructure','/sectors/','Explore industries and applications'),
+    feature('Work from the specification', [
+        'Essen works with engineers, procurement teams and manufacturers to clarify order requirements. A useful enquiry covers the applicable standard, grade, dimensions, quantity, packaging and test documentation.',
+        'For UAE or international enquiries, include the destination and required delivery date so the sales team can review the supply arrangements.'
+    ],'hero','Illustrative steel strand close-up','/partnership/','Discuss a supply requirement')
+))
+interior('partnership','Partnership and Supply','From the first specification discussion to delivery planning.',feature_group(
+    feature('Send a complete enquiry', ['Start with the application and product designation. Add the standard, grade, dimensions, quantity and any requirements for testing, coating or documentation. If the specification is still being developed, share the operating conditions and decision timeline.'], 'hero','Illustrative steel strand','/products/','Find the product'),
+    feature('Plan for receipt and handling', ['Tell us the delivery destination, required date and packaging format. Include unloading, storage or production-line constraints so those requirements can be considered before the order is confirmed.'], 'factory','Illustrative industrial reel handling','/contact/','Request a Quote')
+))
+interior('downloads','Technical Resources','Request product data sheets and quality documentation.',feature_group(
+    feature('Product data sheets', ['Share the product family and applicable standard or grade so the sales team can identify the relevant document. If comparing materials, use the same units and confirm that each data sheet covers the construction and dimensions you intend to order.'], 'pc','Illustrative steel strand detail','/products/','Browse the catalogue'),
+    feature('Test reports and certificates', ['Specify which reports or certificates your purchase order or tender requires. Include the required test results, issuing body or approval scope where applicable.'], 'mill','Illustrative mill test report','mailto:sales@essensteel.com?subject=Product%20documentation%20request','Request documentation')
+))
+interior('projects','Project Enquiries','Discuss wire and strand requirements for your project.',feature_group(
+    feature('Start with the design requirement', ['Tell us what you are building, which product the design specifies and what standard applies. Include the project location, procurement stage, quantities and delivery timetable.'], 'infra','Illustrative infrastructure application','/sectors/','Browse applications'),
+    feature('Prepare the procurement package', ['Share inspection or documentation requirements early, especially where a consultant or authority must review the material. Include packaging or handling constraints for staged deliveries.'], 'hero','Illustrative steel strand','/contact/','Discuss your project')
+))
 interior('contact','Contact Essen Steel','Request a quote or discuss your specification.','<p>For quotations, include your product, application, specification, quantity and delivery destination.</p>'+button('mailto:sales@essensteel.com?subject=Essen%20Steel%20quote%20request','Email a Quote Request')+'<p><a href="mailto:sales@essensteel.com">sales@essensteel.com</a><br><a href="tel:+97125109000">+971 2 510 9000</a></p><p>KHIA4-18D, Kizad A, Al Taweelah, Abu Dhabi, UAE</p>')
 page('insights','Insights','Practical guides to steel strand and technical documentation.',section('<h1>Insights</h1>'+stories_grid()))
 for title,slug,img,desc,body in stories:
