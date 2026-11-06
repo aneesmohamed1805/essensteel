@@ -3,7 +3,7 @@ from html import escape
 from pathlib import Path
 
 root = Path(__file__).parent / 'public'
-nav = [('Products','products'),('Applications','sectors'),('Manufacturing','technology'),('Quality','standards'),('Contact','contact')]
+nav = [('About','about'),('Products','products'),('Applications','sectors'),('Manufacturing','technology'),('Quality','standards'),('Contact','contact')]
 products = [
  ('PC Strand','pc','Prestressing strand for concrete structures such as bridges, rail infrastructure and buildings.','Infrastructure'),
  ('ACSR Steel Core Wire & Strand','acsr','Steel core wire and strand for aluminium conductor steel reinforced (ACSR) used in overhead power transmission. Essen supplies the steel core component.','Power Transmission'),
@@ -46,13 +46,14 @@ def page(path,title,description,body):
 <main id="main">{body}</main>
 <footer class="footer"><div class="wrap"><div class="bar">{logo}<nav aria-label="Footer">{links}</nav></div>
 <div class="row"><span>© 2026 Essen Steel</span><nav aria-label="Company">
-{link('/about/','About')}{link('/projects/','Projects')}{link('/privacy-policy/','Privacy')}{link('/cookies/','Cookies')}</nav></div></div></footer>
+{link('/projects/','Projects')}{link('/privacy-policy/','Privacy')}{link('/cookies/','Cookies')}</nav></div></div></footer>
 </body></html>''',encoding='utf-8')
 
 interior_visuals = {
-    'about': 'factory', 'technology': 'factory', 'standards': 'hero',
-    'sustainability': 'factory', 'sectors': 'infra',
-    'partnership': 'hero', 'downloads': 'hero', 'projects': 'infra',
+    'about': 'about-editorial', 'technology': 'factory', 'standards': 'hero',
+    'sustainability': 'factory', 'sectors': 'infra', 'insights': 'catalogue-editorial',
+    'insights/pc-strand': 'hero', 'insights/mill-test-report': 'factory',
+    'contact': 'contact-editorial', 'products': 'catalogue-editorial', 'partnership': 'hero', 'downloads': 'hero', 'projects': 'infra',
 }
 
 def visual_style(asset):
@@ -68,13 +69,13 @@ def feature_group(*features):
 def interior(path,title,desc,content):
     visual = interior_visuals.get(path)
     if path.startswith('products/'):
-        visual = 'hero'
+        visual = 'catalogue-editorial'
     intro_class = 'intro'
     art = ''
     if visual:
         intro_class += ' intro-visual'
         art = f'<div class="intro-art" style="background-image:{visual_style(visual)}" aria-hidden="true"></div>'
-    body_class = '' if 'sector-panels' in content else 'prose'
+    body_class = '' if path in ('products','contact','insights') or 'sector-panels' in content else 'prose'
     page(path,title,desc,f'<div class="{intro_class}">{art}<div class="wrap"><h1>{escape(title)}</h1><p>{escape(desc)}</p></div></div>{section(content,body_class)}')
 
 def cards():
@@ -96,16 +97,37 @@ hero = '<section class="hero"><img class="outline" src="/assets/outline.png" alt
 resources = '''<div class="dual"><div><span class="eyebrow">Technical Resources</span><h2 class="normal">Product Data and Documentation</h2><p>Request the specification and documentation for your application.</p><a class="textlink" href="/downloads/">View Technical Resources →</a></div>
 <div><span class="eyebrow">Partnership</span><h2 class="normal">A Better Supply Partnership</h2><p>Discuss your specification, quantity and delivery requirements with Essen Steel.</p><a class="textlink" href="/partnership/">Work With Us →</a></div></div>'''
 page('', 'Steel Wire & Strand Manufacturer in the UAE','Explore Essen Steel wire and strand products, applications and technical resources. Request a quote from the sales team.',hero+section(heading('Our Process')+process)+factory+section(heading('Our Products')+cards())+section(resources)+section(heading('Applications')+tiles())+section('<div class="row">'+heading('Insights')+link('/insights/','View all insights →','textlink')+'</div>'+stories_grid()))
-catalogue = """<h1>Our Products</h1>
-<p>Essen Steel manufactures steel wire and strand in Abu Dhabi for infrastructure, construction, power transmission, agriculture and industrial manufacturing. Use the catalogue to identify the product family, then discuss the grade, dimensions and documentation your order requires.</p>"""
-page('products','Steel Wire and Strand Products','Explore steel wires, strands and specialist products for industrial and infrastructure applications.',section(catalogue+cards())+section("""
-<h2>Steel wire products</h2>
-<p>Galvanised steel wire is used in fencing, cable armouring and nail manufacture. Mattress spring wire is formed into springs for bedding, while duct wire serves cable installation and construction applications.</p>
-<h2>Steel strands</h2>
-<p>Prestressed concrete strand is used in bridges, rail infrastructure and buildings. ACSR steel core wire and strand reinforce aluminium conductors used in overhead power transmission. Confirm the required construction and grade against the applicable data sheet.</p>
-<h2>Specialist wires</h2>
-<p>For cable armouring, fence, nail or agricultural wire, share the intended application and the processing or installation requirements with Essen Steel.</p>
-"""+button('/contact/','Discuss Your Specification'),'prose'))
+product_context = {
+    'pc': ('Concrete infrastructure', 'infra'),
+    'acsr': ('Overhead power transmission', 'power'),
+    'galv': ('Fencing and industrial use', 'galv'),
+    'spring': ('Mattress and bedding production', 'bedding'),
+    'duct': ('Duct and cable installation', 'duct'),
+    'special': ('Downstream wire processing', 'special'),
+}
+catalogue_cards = []
+for name,key,description,_ in products:
+    application,asset = product_context[key]
+    catalogue_cards.append(f"""
+    <article class="catalogue-card">
+      <a class="catalogue-visual" href="/products/{key}/" aria-label="{escape(name,quote=True)}">
+        {photo(asset, '', 'catalogue-image')}
+        <span class="catalogue-index">{escape(application)}</span>
+      </a>
+      <div class="catalogue-copy">
+        <h3>{link('/products/'+key+'/',name)}</h3>
+        <p>{escape(description)}</p>
+        {link('/products/'+key+'/','Product details →','textlink')}
+      </div>
+    </article>""")
+catalogue = """
+<div class="section-lead"><span class="eyebrow">The product range</span><h2 class="rule">Find the wire or strand for your application</h2>
+<p>Choose a product family to see what Essen supplies and the information to share with your enquiry. For project-specific grades, dimensions or certification, request the applicable documentation.</p></div>
+<div class="catalogue-grid">"""+''.join(catalogue_cards)+"""</div>
+<div class="catalogue-guide"><div><span class="eyebrow">From application to specification</span><h2>Know what the material needs to do?</h2><p>Explore the industries Essen serves to identify the relevant wire or strand.</p><a class="textlink" href="/sectors/">Browse applications →</a></div>
+<div><span class="eyebrow">From specification to enquiry</span><h2>Already have a material specification?</h2><p>Share the grade, standard, dimensions, quantity and delivery destination with the sales team.</p><a class="textlink" href="/contact/#quote">Request a quote →</a></div></div>
+"""
+interior('products','Steel Wire and Strand Products','Explore Essen Steel’s six product families for construction, power transmission and industrial manufacturing.',catalogue)
 product_notes = {
     'pc': 'For prestressing orders, share the governing standard, strand designation, nominal diameter and required test documentation. Confirm the coil or pack requirements with your installation team.',
     'acsr': 'Give the conductor designation, core construction, wire diameter and applicable coating requirement. The complete conductor specification helps identify the steel core needed.',
@@ -185,7 +207,7 @@ interior('about','About Essen Steel','A UAE manufacturer of steel wire and stran
     feature('Wire and strand from Abu Dhabi', [
         'Essen Steel manufactures steel wire and strand for buyers who need to match a material to a specific design, process or installation. Its range includes prestressed concrete strand, ACSR steel core wire and strand, galvanised wire, mattress spring wire, duct wire and specialist wires.',
         'The range serves different purchasing needs. A civil contractor may buy prestressing strand to a structural specification, while a conductor or spring manufacturer needs wire that meets the requirements of a downstream production process.'
-    ],'factory','Illustrative wire production hall','/products/','Explore Essen Steel products'),
+    ],'industrial-hall','Illustrative wire production hall','/products/','Explore Essen Steel products'),
     feature('Where the material goes', [
         'Prestressing strand is used in concrete bridges, rail infrastructure and buildings. Steel core wire and strand reinforce ACSR conductors. Other wires serve fencing, agricultural, bedding, cable and industrial applications.',
         'Start with the application to see what Essen supplies and which details to bring to a technical discussion.'
@@ -207,8 +229,44 @@ interior('projects','Project Enquiries','Discuss wire and strand requirements fo
     feature('Start with the design requirement', ['Tell us what you are building, which product the design specifies and what standard applies. Include the project location, procurement stage, quantities and delivery timetable.'], 'infra','Illustrative infrastructure application','/sectors/','Browse applications'),
     feature('Prepare the procurement package', ['Share inspection or documentation requirements early, especially where a consultant or authority must review the material. Include packaging or handling constraints for staged deliveries.'], 'hero','Illustrative steel strand','/contact/','Discuss your project')
 ))
-interior('contact','Contact Essen Steel','Request a quote or discuss your specification.','<p>For quotations, include your product, application, specification, quantity and delivery destination.</p>'+button('mailto:sales@essensteel.com?subject=Essen%20Steel%20quote%20request','Email a Quote Request')+'<p><a href="mailto:sales@essensteel.com">sales@essensteel.com</a><br><a href="tel:+97125109000">+971 2 510 9000</a></p><p>KHIA4-18D, Kizad A, Al Taweelah, Abu Dhabi, UAE</p>')
-page('insights','Insights','Practical guides to steel strand and technical documentation.',section('<h1>Insights</h1>'+stories_grid()))
+quote_products = ''.join(f'<option>{escape(name)}</option>' for name, *_ in products)
+contact_content = f"""
+<div class="contact-grid">
+  <section id="quote" class="quote-panel">
+    <span class="eyebrow">Sales enquiries</span>
+    <h2 class="rule">Request a quote</h2>
+    <p>Tell us what you need. Include the specification and delivery requirements if you have them.</p>
+    <form id="quote-form">
+      <div class="quote-fields">
+        <label>Name<input name="Name" autocomplete="name" required></label>
+        <label>Company<input name="Company" autocomplete="organization" required></label>
+        <label>Work email<input name="Work email" type="email" autocomplete="email" required></label>
+        <label>Product<select name="Product"><option value="">Select a product</option>{quote_products}<option>Help me choose</option></select></label>
+      </div>
+      <label>Project or order details<textarea name="Project or order details" rows="5" placeholder="Application, grade or standard, quantity, destination and required date" required></textarea></label>
+      <button class="button" type="submit">Open email draft →</button>
+      <p class="form-note">This opens a draft in your email app. Review it, attach any specifications and send it to Essen Steel.</p>
+    </form>
+    <noscript><p>Send your enquiry to <a href="mailto:sales@essensteel.com">sales@essensteel.com</a>.</p></noscript>
+  </section>
+  <aside class="contact-aside">
+    {photo('industrial-hall','Illustrative steel wire production hall','contact-photo')}
+    <div class="contact-details">
+      <h2>Talk to Essen Steel</h2>
+      <p><a href="mailto:sales@essensteel.com">sales@essensteel.com</a><br><a href="tel:+97125109000">+971 2 510 9000</a></p>
+      <h3>Abu Dhabi, UAE</h3>
+      <address>KHIA4-18D, Kizad A<br>Al Taweelah, Abu Dhabi, UAE</address>
+    </div>
+  </aside>
+</div>
+<div class="catalogue-guide">
+  <div><h2>Need technical documents?</h2><p>Share the product and governing standard or tell us which test report or certificate your project requires.</p><a class="textlink" href="/downloads/">Technical resources →</a></div>
+  <div><h2>Discuss a supply requirement</h2><p>For staged deliveries or specialist handling, include the delivery window, packaging and receiving constraints in your enquiry.</p><a class="textlink" href="/partnership/">Partnership and supply →</a></div>
+</div>
+<script src="/assets/contact.js" defer></script>
+"""
+interior('contact','Contact Essen Steel','Speak to the sales team about a quote, product specification or delivery requirement.',contact_content)
+interior('insights','Insights','Practical guides to steel strand and technical documentation.',stories_grid())
 for title,slug,img,desc,body in stories:
     interior('insights/'+slug,title,desc,photo(img,'Illustrative detail','detail-photo')+f'<p>{body}</p>'+button('/downloads/','Technical Resources'))
 interior('privacy-policy','Privacy','Information for visitors to this review build.','<p>Quote and documentation links open your email app. If you choose to send an email, Essen Steel receives the information you include in it.</p>')
