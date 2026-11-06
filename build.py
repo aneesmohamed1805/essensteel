@@ -1,7 +1,5 @@
 """Generate the review site's HTML from shared templates."""
 from html import escape
-import json
-import re
 from pathlib import Path
 
 root = Path(__file__).parent / 'public'
@@ -36,26 +34,7 @@ def photo(name,alt='',cls=''):
     name = visual_assets.get(name, name)
     return f'<img class="{cls}" src="/assets/{name}.webp" alt="{escape(alt,quote=True)}" loading="lazy">'
 
-# Keep the approved page templates intact while assigning one image to each slot.
-image_placements = json.loads(Path(__file__).with_name('image-placements.json').read_text())
-image_reference = re.compile(r'/assets/[\w-]+\.webp(?:" alt="[^"]*")?')
-
-def place_images(path, body):
-    planned = image_placements.get(path, [])
-    actual = list(image_reference.finditer(body))
-    if len(actual) != len(planned):
-        raise ValueError(f'{path or "homepage"} has {len(actual)} image slots, expected {len(planned)}')
-    for match, asset in reversed(list(zip(actual, planned))):
-        name, _, alt = asset.partition('|')
-        previous = match.group()
-        suffix = previous[previous.index('" alt='):] if '" alt=' in previous else ''
-        if alt and suffix:
-            suffix = f'" alt="{escape(alt,quote=True)}"'
-        body = body[:match.start()] + f'/assets/{name}.webp{suffix}' + body[match.end():]
-    return body
-
 def page(path,title,description,body):
-    body = place_images(path, body)
     links = ''.join(link('/'+slug+'/',name) for name,slug in nav)
     logo = '<a href="/" aria-label="Essen Steel home"><img class="logo" src="/assets/logo.webp" alt="Essen Steel" width="1511" height="778"></a>'
     target = root / path / 'index.html' if path != '404.html' else root / path
