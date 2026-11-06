@@ -182,3 +182,8 @@ main .button + p {
 main .sector-panels + .button {
   margin-block-start: clamp(1.25rem, 3vw, 2rem);
 }
+
+/* Give the homepage process strip more vertical space. */
+main > .hero + .section:has(> .steps) {
+  padding-block: clamp(3rem, 7vw, 6rem);
+}
