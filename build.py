@@ -73,7 +73,7 @@ def page(path,title,description,body):
         main_links.append(parent)
     main_menu = ''.join(main_links)
     footer_links = link('/about/','About') + links
-    logo = '<a href="/" aria-label="Essen Steel home"><img class="logo" src="/assets/logo.webp" alt="Essen Steel" width="1511" height="778"></a>'
+    logo = '<a href="/" aria-label="Essen Steel home"><img class="logo" src="/assets/logo.webp" alt="Essen Steel" width="156" height="80"></a>'
     target = root / path / 'index.html' if path != '404.html' else root / path
     target.parent.mkdir(parents=True,exist_ok=True)
     target.write_text(f'''<!doctype html>
@@ -82,6 +82,14 @@ def page(path,title,description,body):
 <title>{escape(title)} | Essen Steel</title>
 <meta name="description" content="{escape(description,quote=True)}">
 <meta name="robots" content="noindex,nofollow">
+<style>
+.logo{display:block;width:clamp(96px,12vw,156px);max-width:100%;height:auto;aspect-ratio:1511/778}
+.footer{background:#000;color:#fff}
+.footer .logo{filter:brightness(0) invert(1)}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/assets/site.css"></head>
 <body><a class="skip" href="#main">Skip to content</a>
 <header class="wrap bar">{logo}<nav aria-label="Main">{main_menu}</nav></header>
