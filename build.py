@@ -150,7 +150,31 @@ def heading(label):
 steps = [('Draw','Reduce wire to the required size.'),('Strand','Form wire into strand where specified.'),('Test','Check against agreed requirements.'),('Prepare','Finish and pack for supply.'),('Supply','Coordinate delivery.')]
 process = '<ol class="steps">'+''.join(f'<li><strong>{name}</strong>{desc}</li>' for name,desc in steps)+'</ol>'
 factory = '<div class="factory"><div class="factory-inner"><div class="wrap"><span class="eyebrow">Green Manufacturing</span><h2>Resource Efficiency<br>in Wire Production</h2><p>Wire drawing, stranding and quality checks support the production of steel wire and strand for a range of applications.</p>'+button('/technology/','Our Manufacturing')+'</div></div></div>'
-hero = '<section class="hero"><img class="outline" src="/assets/outline.png" alt=""><div class="wrap"><h1>Steel Wire. Steel Strand.</h1><p>Made in Abu Dhabi for concrete infrastructure, overhead power networks and industrial production.</p>'+button('/products/','Explore Products')+'<small class="hero-caption">Illustrative infrastructure project</small></div></section>'
+hero_applications = [('infra', 'Infrastructure', 'Prestressing strand for concrete bridges, rail structures and civil works.'), ('construction', 'Construction', 'PC strand for precast and post-tensioned concrete construction.'), ('power', 'Power Transmission', 'Steel core wire and strand for ACSR overhead conductors.'), ('telecommunications', 'Telecommunications', 'Steel wire for duct and cable installation applications.'), ('other', 'Agriculture and Fencing', 'Galvanised steel wire for fencing, mesh and crop support.'), ('manufacturing', 'Manufacturing', 'Specialist wire for downstream forming and industrial applications.'), ('bedding', 'Bedding', 'Steel spring wire for mattress component manufacturing.')]
+
+def homepage_hero():
+    opening = '<section class="hero"><img class="outline" src="/assets/outline.png" alt=""><div class="wrap"><h1>Steel Wire. Steel Strand.</h1><p>Made in Abu Dhabi for concrete infrastructure, overhead power networks and industrial production.</p>'+button('/products/','Explore Products')+'<small class="hero-caption">Illustrative infrastructure project</small></div></section>'
+    opening = opening.replace('<section class="hero">', '<section class="hero hero-slide" data-slide-title="Essen Steel" aria-label="1 of 8">', 1)
+    slides = [opening]
+    for index, (key, title, description) in enumerate(hero_applications, 2):
+        slides.append(
+            f'<section class="hero hero-slide hero-application" hidden data-slide-title="{escape(title, quote=True)}" '
+            f'data-slide-image="hero-{key}.webp" aria-label="{index} of {len(hero_applications) + 1}">'
+            f'<div class="wrap"><span class="eyebrow">Applications</span><h2>{escape(title)}</h2>'
+            f'<p>{escape(description)}</p>{button("/sectors/#" + key, "Explore application")}'
+            '<small class="hero-caption">Illustrative application</small></div></section>'
+        )
+    controls = (
+        '<div class="hero-controls" hidden aria-label="Slide controls">'
+        '<button type="button" data-slide-step="-1" aria-label="Previous slide">←</button>'
+        '<span class="hero-counter" aria-hidden="true">1 / 8</span>'
+        '<button type="button" data-slide-step="1" aria-label="Next slide">→</button>'
+        '<span class="hero-announcement" role="status"></span></div>'
+    )
+    return ('<div class="hero-slider" role="region" aria-roledescription="carousel" aria-label="Essen Steel and its applications">'
+            + ''.join(slides) + controls + '</div><script src="/assets/hero-slider.js" defer></script>')
+
+hero = homepage_hero()
 resources = '''<div class="dual"><div><span class="eyebrow">Technical Resources</span><h2 class="normal">Product Data and Documentation</h2><p>Request the specification and documentation for your application.</p><a class="textlink" href="/downloads/">View Technical Resources →</a></div>
 <div><span class="eyebrow">Partnership</span><h2 class="normal">A Better Supply Partnership</h2><p>Discuss your specification, quantity and delivery requirements with Essen Steel.</p><a class="textlink" href="/partnership/">Work With Us →</a></div></div>'''
 page('', 'Steel Wire & Strand Manufacturer in the UAE','Explore Essen Steel wire and strand products, applications and technical resources. Request a quote from the sales team.',hero+section(heading('Our Process')+process)+factory+section(heading('Our Products')+cards())+section(resources)+section(heading('Applications')+tiles())+section('<div class="row">'+heading('Insights')+link('/insights/','View all insights →','textlink')+'</div>'+stories_grid(homepage=True)))

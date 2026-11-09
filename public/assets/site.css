@@ -183,7 +183,7 @@ main .sector-panels + .button {
 }
 
 /* Give the homepage process strip more vertical space. */
-main > .hero + .section:has(> .steps) {
+main > .hero-slider + .section:has(> .steps) {
   padding-block: clamp(3rem, 7vw, 6rem);
 }
 
@@ -193,3 +193,16 @@ main > .hero + .section:has(> .steps) {
 @media(max-width:680px){.green-manufacturing{grid-template-columns:1fr}.green-manufacturing>img{height:auto;min-height:0;aspect-ratio:3/2}}
 .green-manufacturing p{max-width:72ch}
 .green-manufacturing-copy>.textlink{display:inline-block;margin-top:.75rem}
+
+.hero-slider{position:relative}
+.hero-slide[hidden],.hero-controls[hidden]{display:none}
+.hero-application{background:linear-gradient(90deg,#080b0de8,#080b0d21 80%),linear-gradient(0deg,#080b0dc9,transparent 55%),var(--slide-image) center/cover no-repeat,#171d1c}
+.hero-application h2{font-size:clamp(2.1rem,5.5vw,5.3rem);line-height:1.03;margin:0 0 .65rem}
+.hero-application .eyebrow{color:#ff914d}
+.hero-slider.has-controls .hero .wrap{padding-bottom:clamp(5rem,8vw,7rem)}
+.hero-controls{position:absolute;z-index:2;bottom:1rem;right:4%;display:flex;align-items:center;gap:.7rem;color:#fff}
+.hero-controls button{width:44px;height:44px;border:1px solid #ffffff9c;background:#111b;color:#fff;font:inherit;cursor:pointer}
+.hero-controls button:hover{background:#343434}
+.hero-controls button:focus-visible{outline:2px solid #ff914d;outline-offset:2px}
+.hero-counter{font-variant-numeric:tabular-nums;font-size:.9rem}
+.hero-announcement{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
