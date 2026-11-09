@@ -200,9 +200,9 @@ main > .hero-slider + .section:has(> .steps) {
 .hero-application h2{font-size:clamp(2.1rem,5.5vw,5.3rem);line-height:1.03;margin:0 0 .65rem}
 .hero-application .eyebrow{color:#ff914d}
 .hero-slider.has-controls .hero .wrap{padding-bottom:clamp(5rem,8vw,7rem)}
-.hero-controls{position:absolute;z-index:2;top:1rem;right:4%;display:flex;align-items:center;gap:.7rem;color:#fff}
-.hero-controls button{width:44px;height:44px;border:1px solid #ffffff9c;background:#111b;color:#fff;font:inherit;cursor:pointer}
-.hero-controls button:hover{background:#343434}
+.hero-controls{position:absolute;z-index:2;top:1rem;right:4%;display:flex;align-items:center;gap:0;background:var(--orange);color:#16100b}
+.hero-controls button{width:44px;height:44px;border:1px solid #16100b55;background:var(--orange);color:#16100b;font:inherit;cursor:pointer}
+.hero-controls button:hover{background:#ff8745}
 .hero-controls button:focus-visible{outline:2px solid #ff914d;outline-offset:2px}
-.hero-counter{font-variant-numeric:tabular-nums;font-size:.9rem}
+.hero-counter{font-variant-numeric:tabular-nums;font-size:.9rem;padding-inline:.7rem}
 .hero-announcement{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
